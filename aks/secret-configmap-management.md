@@ -428,7 +428,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: qa-agent-api  # 레지스트리와 태그 없이 이름만
+        image: qa-agent-api  # Kustomize가 치환할 플레이스홀더 이름
 ```
 
 ```yaml
@@ -463,7 +463,7 @@ kubectl apply -k overlays/production/
 # values.yaml
 image:
   repository: myregistry.azurecr.io/qa-agent-api
-  tag: latest
+  tag: v1.0.0  # 배포 시 --set으로 오버라이드
   pullPolicy: IfNotPresent
 ```
 
@@ -693,7 +693,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: qa-agent-api:latest
+        image: qa-agent-api:v1.0.0
 ```
 
 ### 방법 3: ConfigMap을 해시값으로 버전 관리
@@ -824,7 +824,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: myregistry.azurecr.io/qa-agent-api:latest
+        image: myregistry.azurecr.io/qa-agent-api:v1.0.0  # Kustomize/Helm으로 관리
         ports:
         - containerPort: 8080
         envFrom:
