@@ -1156,6 +1156,30 @@ VNet Injection을 선택하는 경우:
 ✓ 가장 높은 수준의 보안이 요구될 때
 ```
 
+### 네트워크 통제 가능 여부
+
+이것이 가장 중요한 판단 기준임:
+
+| 서비스 통제 가능 여부 | 어떤 방식이 필요한가 |
+|---------------------|-------------------|
+| NSG/UDR/Firewall로 통제 가능 | VNet Injection |
+| 통제 불가능 | Private Endpoint 또는 VNet Integration |
+
+**실무 예시**:
+
+```
+AKS는 네트워크 완전 통제 가능
+→ VNet Injection
+
+App Service는 통제 불가
+→ VNet Integration만 가능
+
+SQL Database는 통제 불가
+→ Private Endpoint로만 접근 가능
+```
+
+이 단순한 기준으로 판단하면 거의 100% 맞음.
+
 ### 실전 체크리스트
 
 ```
