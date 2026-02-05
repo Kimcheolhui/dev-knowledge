@@ -686,6 +686,8 @@ AKS 노드의 모든 인터넷 트래픽이 방화벽을 경유하여
 
 ## 비용 고려사항
 
+> **참고**: 아래 비용 정보는 2026년 2월 기준이며, 실제 비용은 지역, 사용량, Azure 가격 정책에 따라 달라질 수 있음. 최신 가격은 [Azure 가격 계산기](https://azure.microsoft.com/ko-kr/pricing/calculator/)에서 확인 가능.
+
 ### Private Endpoint
 
 ```
