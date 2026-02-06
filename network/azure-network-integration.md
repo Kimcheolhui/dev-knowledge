@@ -4,6 +4,52 @@
 
 Azure에서 PaaS(Platform as a Service) 리소스와 VNet(Virtual Network)을 통합하는 방법은 크게 세 가지가 있음: Private Endpoint, VNet Integration, VNet Injection. 각각은 네트워크 트래픽의 방향, 보안 요구사항, 서비스 배치 위치에 따라 사용 목적이 다름.
 
+## 핵심 개념 구분
+
+세 가지 방식의 본질적 차이를 이해하는 것이 Azure 네트워크 아키텍처 설계의 핵심임.
+
+### 한 문장 요약
+
+- **Private Endpoint**: "PaaS를 VNet에서 접근하게 만들기" (Inbound 전용)
+- **VNet Integration**: "PaaS가 VNet을 통로로 사용" (Outbound 전용)
+- **VNet Injection**: "PaaS가 VNet 안으로 이사 옴" (위치 자체가 VNet)
+
+### 본질적 차이
+
+| 측면 | Private Endpoint | VNet Integration | VNet Injection |
+|------|-----------------|------------------|----------------|
+| **목적** | PaaS로 들어오기 | PaaS가 VNet으로 나가기 | PaaS가 VNet에 살기 |
+| **방향** | Inbound | Outbound | Both |
+| **NIC 위치** | VNet에 NIC 생성 | 없음 | 리소스에 NIC |
+| **PaaS 위치** | Microsoft 네트워크 | Microsoft 네트워크 | 내 VNet |
+| **NSG/UDR 영향** | ❌ | ❌ | ✅ |
+| **DNS 중요도** | 매우 높음 | 보통 | 낮음 |
+
+### 아키텍처 판단 기준
+
+실무에서 어떤 방식을 선택할지 판단하는 기준:
+
+1. **NSG / UDR / Firewall로 통제하고 싶다** → VNet Injection 필요
+2. **Private Endpoint 붙은 리소스에 접근만 하고 싶다** → VNet Integration
+3. **PaaS를 VNet에서만 접근하게 하고 싶다** → Private Endpoint
+
+### 자주 하는 착각
+
+많은 개발자가 다음과 같이 오해함:
+
+> "App Service에 VNet 붙였으니까 VNet 안에 있겠지?"
+
+**틀렸음**. App Service는 VNet Integration만 지원하므로 여전히 Microsoft 관리 네트워크에 존재함.
+
+그 결과:
+- NSG 설정해도 App Service에 안먹힘
+- UDR 안먹힘
+- Firewall 통제 안 됨
+
+**이유**: VNet 밖에 있기 때문
+
+반면 **AKS는 전부 먹힘**. 이유는 VNet Injection이기 때문.
+
 ## Private Endpoint
 
 ### 정의
@@ -103,6 +149,23 @@ Private Endpoint 사설 IP 반환 (10.0.1.5)
 
 VNet Integration은 Azure PaaS 서비스가 VNet 내부의 리소스로 아웃바운드 연결을 할 수 있도록 하는 기능임. 주로 App Service, Function App, Logic App 등이 VNet 내부 리소스(VM, 데이터베이스 등)에 접근해야 할 때 사용함.
 
+**핵심**: PaaS는 여전히 Microsoft 관리 네트워크에 존재하고, VNet을 '나가는 경로'로만 사용함.
+
+### 왜 필요한가?
+
+이것이 VNet Integration의 핵심 존재 이유임:
+
+```
+문제: App Service가 Private Endpoint가 달린 리소스에 접근하려면?
+
+PaaS는 기본적으로 인터넷으로만 나갈 수 있는데,
+Private Endpoint는 VNet 내부 IP라서 접근 불가.
+
+해결: VNet Integration을 붙이면
+App Service → VNet Subnet → Private Endpoint → SQL
+이 경로가 가능해짐.
+```
+
 ### 사용 목적
 
 - **아웃바운드 트래픽 제어**: PaaS 서비스에서 VNet 내부 리소스로의 연결
@@ -199,6 +262,16 @@ VNet Integration을 활용하여 다음 네트워크 기능 사용 가능:
 
 ### 특징
 
+| 항목 | VNet Integration |
+|------|------------------|
+| **PaaS가 VNet 안에 있음** | ❌ |
+| **VNet IP를 가짐** | ❌ |
+| **NIC가 생김** | ❌ |
+| **Outbound만 VNet 경유** | ✅ |
+| **Inbound를 VNet으로 받을 수 있음** | ❌ (Private Endpoint 별도 필요) |
+| **주 목적** | Private 리소스 접근 |
+
+추가 세부 사항:
 - **트래픽 방향**: 아웃바운드 (PaaS 서비스 → VNet)
 - **서비스 위치**: Azure 관리 영역 (VNet 외부)
 - **단일 VNet**: 하나의 App Service는 하나의 VNet에만 연결 가능
@@ -218,6 +291,32 @@ VNet Integration을 활용하여 다음 네트워크 기능 사용 가능:
 ### 정의
 
 VNet Injection은 Azure 서비스 자체를 VNet의 서브넷 내에 직접 배포하는 방식임. 서비스가 VNet의 일부가 되어 완전한 네트워크 격리와 제어를 제공함.
+
+**핵심**: PaaS 리소스가 아예 당신의 VNet Subnet 안에 생성됨. 더 이상 Microsoft 네트워크에 있는 PaaS가 아니라, 내 VNet에 사는 리소스가 됨.
+
+### 왜 필요한가?
+
+AKS가 대표적인 예시:
+
+```
+AKS Node를 만들면:
+- VM NIC → 내 VNet Subnet IP
+- Pod IP → VNet CIDR 대역
+
+이건 더 이상 Microsoft 네트워크에 있는 PaaS가 아님.
+내 VNet에 사는 리소스임.
+```
+
+### 특징
+
+| 항목 | VNet Injection |
+|------|----------------|
+| **PaaS가 VNet 안에 있음** | ✅ |
+| **VNet IP를 가짐** | ✅ |
+| **NIC가 생김** | ✅ |
+| **NSG/UDR 영향 받음** | ✅ |
+| **네트워크 완전 제어 가능** | ✅ |
+| **주 목적** | 네트워크 완전 통제 |
 
 ### 사용 목적
 
@@ -407,6 +506,108 @@ AKS 노드의 모든 인터넷 트래픽이 방화벽을 경유하여
 | **다중 VNet** | 가능 | 불가 (1:1) | 불가 (1:1) |
 | **주요 사용 사례** | PaaS 보안 접근 | PaaS의 VNet 리소스 접근 | 완전 격리된 PaaS |
 | **비용** | Private Endpoint + 데이터 | 무료 (Gateway는 유료) | 서비스별 상이 |
+
+### Azure 서비스별 지원 매트릭스
+
+이 표는 각 Azure 서비스가 어떤 VNet 통합 방식을 지원하는지 보여줌. 이를 통해 아키텍처 설계 시 어떤 서비스를 어떻게 배치할지 판단 가능함.
+
+| 서비스 | Private Endpoint | VNet Integration | VNet Injection |
+|--------|-----------------|------------------|----------------|
+| **Compute** |
+| Azure App Service | ✅ | ✅ | ❌ |
+| Azure Functions | ✅ | ✅ | ❌ |
+| Azure Logic Apps | ✅ | ✅ (Standard) | ❌ |
+| Azure Kubernetes Service (AKS) | ❌ | ❌ | ✅ |
+| Azure Container Instances (ACI) | ❌ | ❌ | ✅ |
+| Azure Batch | ❌ | ❌ | ✅ |
+| **Database** |
+| Azure SQL Database | ✅ | ❌ | ❌ |
+| Azure SQL Managed Instance | ❌ | ❌ | ✅ |
+| Azure Database for PostgreSQL (Single) | ✅ | ❌ | ❌ |
+| Azure Database for PostgreSQL (Flexible) | ✅ | ❌ | ✅ |
+| Azure Database for MySQL (Flexible) | ✅ | ❌ | ✅ |
+| Azure Cosmos DB | ✅ | ❌ | ❌ |
+| **Storage** |
+| Azure Storage (Blob, File, Queue, Table) | ✅ | ❌ | ❌ |
+| Azure Data Lake Storage | ✅ | ❌ | ❌ |
+| **Integration** |
+| Azure Service Bus | ✅ | ❌ | ❌ |
+| Azure Event Hubs | ✅ | ❌ | ❌ |
+| Azure Event Grid | ✅ | ❌ | ❌ |
+| **AI + Analytics** |
+| Azure Cognitive Services | ✅ | ❌ | ❌ |
+| Azure Machine Learning | ✅ | ❌ | ✅ |
+| Azure Databricks | ❌ | ❌ | ✅ |
+| Azure Synapse Analytics | ✅ | ❌ | ✅ |
+| **Management** |
+| Azure Key Vault | ✅ | ❌ | ❌ |
+| Azure Container Registry | ✅ | ❌ | ❌ |
+| Azure API Management | ✅ | ❌ | ✅ |
+| **Networking** |
+| Azure Application Gateway | ❌ | ❌ | ✅ |
+| Azure Firewall | ❌ | ❌ | ✅ |
+
+### 표에서 발견할 수 있는 패턴
+
+이 표를 보면 서비스들이 3가지 타입으로 나뉨:
+
+#### 타입 1: Private Endpoint만 지원하는 서비스
+
+**예시**: SQL Database, Storage, Cosmos DB, Key Vault
+
+**공통점**: 데이터 저장소 / 플랫폼 서비스
+
+이들은 절대 VNet 안으로 들어오지 않음. 대신 VNet 안에서 접근해야 하므로 Private Endpoint만 존재함.
+
+#### 타입 2: VNet Integration만 지원하는 서비스
+
+**예시**: App Service, Functions
+
+**공통점**: 코드를 실행하는 PaaS (Compute PaaS)
+
+이들은 Private 리소스(SQL, Storage)에 접근해야 하지만, VNet 안에 들어오지는 않음.
+
+#### 타입 3: VNet Injection 지원하는 서비스
+
+**예시**: AKS, Databricks, ACI, SQL Managed Instance
+
+**공통점**: 네트워크 통제가 필요한 고급 Compute PaaS 또는 완전 격리 데이터베이스
+
+이들은 NSG, UDR, Firewall 영향을 받아야 하고, IP를 직접 가져야 함.
+
+### 표가 보여주는 중요한 사실
+
+많은 사람들이 이렇게 오해함:
+
+> "App Service도 VNet 붙일 수 있으니까 VNet 안에 있겠지?"
+
+표를 보면:
+- App Service: Integration ✅, Injection ❌
+
+즉, **App Service는 절대 VNet 안에 들어오지 못함**
+
+반대로:
+- AKS: Integration ❌, Injection ✅
+
+**이유**: 이미 VNet 안에 있기 때문에 VNet Integration이라는 개념 자체가 필요 없음
+
+### 아키텍처 의사결정 가이드
+
+이 표를 보면 Azure 네트워크 설계가 바로 나옴:
+
+전형적인 Private 아키텍처:
+```
+App Service (VNet Integration)
+   │
+   ▼
+VNet
+   │
+   ├─→ Private Endpoint → SQL Database
+   ├─→ Private Endpoint → Storage
+   └─→ AKS (VNet Injection)
+```
+
+이 구조가 표 그대로임.
 
 ### 사용 시나리오별 선택 가이드
 
@@ -954,6 +1155,30 @@ VNet Injection을 선택하는 경우:
 ✓ 모든 네트워크 트래픽을 세밀하게 제어하고 싶을 때
 ✓ 가장 높은 수준의 보안이 요구될 때
 ```
+
+### 네트워크 통제 가능 여부
+
+이것이 가장 중요한 판단 기준임:
+
+| 서비스 통제 가능 여부 | 어떤 방식이 필요한가 |
+|---------------------|-------------------|
+| NSG/UDR/Firewall로 통제 가능 | VNet Injection |
+| 통제 불가능 | Private Endpoint 또는 VNet Integration |
+
+**실무 예시**:
+
+```
+AKS는 네트워크 완전 통제 가능
+→ VNet Injection
+
+App Service는 통제 불가
+→ VNet Integration만 가능
+
+SQL Database는 통제 불가
+→ Private Endpoint로만 접근 가능
+```
+
+이 단순한 기준으로 판단하면 거의 100% 맞음.
 
 ### 실전 체크리스트
 
