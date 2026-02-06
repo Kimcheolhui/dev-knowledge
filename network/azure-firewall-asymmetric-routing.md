@@ -605,8 +605,8 @@ Bastion Subnet의 UDR을 아예 제거
 
 ### 관련 개념
 
-- [RFC 1122 - Host Requirements](https://tools.ietf.org/html/rfc1122) - TCP 동작 방식
-- [RFC 5735 - Special Use IPv4 Addresses](https://tools.ietf.org/html/rfc5735) - 예약된 IP 대역
+- [RFC 1122 - Host Requirements](https://datatracker.ietf.org/doc/html/rfc1122) - TCP 동작 방식
+- [RFC 5735 - Special Use IPv4 Addresses](https://datatracker.ietf.org/doc/html/rfc5735) - 예약된 IP 대역
 - Asymmetric Routing in Stateful Firewalls
 
 ### 네트워킹 기본
