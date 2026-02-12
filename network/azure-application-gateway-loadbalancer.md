@@ -38,7 +38,7 @@ Azure 리소스와 VNet의 관계를 이해하는 것이 Application Gateway와 
 
 **대표 예시:**
 - Azure Application Gateway
-- Azure Kubernetes Service (AKS)
+- Azure Kubernetes Service (AKS Node Pool)
 - Azure Virtual Machines
 
 **특징:**
@@ -47,6 +47,12 @@ Azure 리소스와 VNet의 관계를 이해하는 것이 Application Gateway와 
 - VNet Peering을 통한 Hub-Spoke 아키텍처 구성 가능
 - Private IP를 통한 내부 통신 가능
 - Azure Firewall 등을 통한 트래픽 제어 가능
+
+**참고: AKS의 네트워크 모델**
+- AKS는 여러 구성 요소로 이루어져 있으며, 각 구성 요소의 네트워크 모델이 다름
+- **Node Pool (Worker Nodes)**: VNet Injection - 노드들이 VNet의 서브넷에 직접 배치되며 Private IP를 가짐
+- **API Server**: VNet Injection도 Integration도 아님 - Private Endpoint를 통해 VNet에서 접근 가능 (Private AKS 클러스터의 경우)
+- 따라서 "AKS는 VNet Injection"이라는 표현은 정확히는 Node Pool에 대한 설명임
 
 ### 비교표
 
@@ -59,7 +65,7 @@ Azure 리소스와 VNet의 관계를 이해하는 것이 Application Gateway와 
 | **NSG 적용** | 불가능 | 가능 |
 | **Private Backend 통신** | 제한적 | 직접 가능 |
 | **트래픽 방향** | 주로 Outbound | Inbound & Outbound |
-| **예시** | App Service, Functions | Application Gateway, AKS, VM |
+| **예시** | App Service, Functions | Application Gateway, AKS Node Pool, VM |
 
 ### 실무 중요성
 
