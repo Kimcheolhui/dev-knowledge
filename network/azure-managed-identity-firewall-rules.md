@@ -61,45 +61,7 @@ curl -H "Metadata:true" "http://169.254.169.254/metadata/instance?api-version=20
 # 실패 시: 타임아웃 또는 연결 거부
 ```
 
-IMDS 호출이 실패하면 `az login --identity`는 당연히 실패한다.
-
-#### 해결 방법
-
-**프록시 예외 설정 (Linux)**
-
-```bash
-# 환경변수에 NO_PROXY 추가
-export NO_PROXY=169.254.169.254,168.63.129.16,localhost,127.0.0.1
-
-# 영구 설정 (bash)
-echo 'export NO_PROXY=169.254.169.254,168.63.129.16,localhost,127.0.0.1' >> ~/.bashrc
-source ~/.bashrc
-
-# 영구 설정 (시스템 전역)
-echo 'export NO_PROXY=169.254.169.254,168.63.129.16,localhost,127.0.0.1' >> /etc/environment
-```
-
-**프록시 예외 설정 (Windows)**
-
-```powershell
-# 사용자 환경변수 설정
-[Environment]::SetEnvironmentVariable("NO_PROXY", "169.254.169.254,168.63.129.16,localhost,127.0.0.1", "User")
-
-# 시스템 환경변수 설정 (관리자 권한 필요)
-[Environment]::SetEnvironmentVariable("NO_PROXY", "169.254.169.254,168.63.129.16,localhost,127.0.0.1", "Machine")
-```
-
-**잘못된 UDR 제거**
-
-Azure Portal에서 Route Table을 확인하고 IMDS IP 관련 경로가 있으면 제거:
-
-```
-제거해야 할 경로 예시:
-- Address Prefix: 169.254.169.254/32, Next Hop: Virtual Appliance
-- Address Prefix: 168.63.129.16/32, Next Hop: Virtual Appliance
-```
-
-**중요**: IMDS 단계가 차단된 경우 "Firewall에 FQDN 추가"로는 해결되지 않음. VM 내부 설정을 수정해야 한다.
+IMDS 호출이 실패하면 `az login --identity`는 당연히 실패한다. 이 경우 IMDS 자체가 차단된 것이므로, 이번 이슈(Firewall 차단)의 원인이 아니다.
 
 ### 2. IMDS는 작동하지만 ARM 호출이 Firewall에서 차단된 경우 (가장 흔함)
 
@@ -147,111 +109,21 @@ Azure Firewall Application Rule에 다음 FQDN을 허용해야 한다:
 이유: ARM API 엔드포인트로, 구독/테넌트 정보 조회 및 대부분의 Azure 관리 작업에 필요
 ```
 
-### 권장 허용 목록 (FQDN Tag 사용)
+### 권장 허용 목록 (Network Rule with Service Tag)
 
-Azure Firewall은 FQDN Tag를 지원하여 Microsoft 서비스 도메인 묶음을 쉽게 허용할 수 있음:
-
-```
-권장 FQDN Tags:
-1. AzureResourceManager
-   - management.azure.com
-   - ARM 관련 엔드포인트 포함
-
-2. AzureActiveDirectory
-   - login.microsoftonline.com
-   - Entra ID 인증 및 토큰 관련 엔드포인트
-   - 일부 Azure CLI 명령에서 필요할 수 있음
-```
-
-**FQDN Tag 사용의 장점**:
-- Microsoft가 관리하는 엔드포인트 목록이 자동으로 업데이트됨
-- 개별 FQDN을 수동으로 관리할 필요 없음
-- 서비스 엔드포인트 변경에 자동 대응
-
-### Azure Firewall Application Rule 설정
-
-#### Azure Portal
+Azure Firewall Network Rule에서 Service Tag를 사용하여 허용할 수 있다:
 
 ```
-1. Azure Portal → Firewall → Rules → Application Rules
-2. Add application rule collection
-
-Rule Collection 설정:
+Network Rule 설정:
   Name: Allow-Azure-Management
-  Priority: 100
-  Action: Allow
-
-Rule 추가:
-  Name: Allow-ARM
-  Source Type: IP Address
-  Source: * (또는 특정 서브넷 CIDR)
-  Protocol: https:443
-  Target Type: FQDN Tag
-  Target FQDNs: AzureResourceManager, AzureActiveDirectory
+  Source: 10.0.0.0/16 (또는 특정 서브넷)
+  Destination: AzureCloud (Service Tag)
+  Protocol: TCP
+  Destination Ports: 443
 ```
 
-#### Azure CLI
+**참고**: Application Rule의 FQDN 기반 제어가 더 정밀하지만, Service Tag는 Azure 관리 평면 전체를 포괄적으로 허용한다.
 
-```bash
-# Application Rule Collection 생성
-az network firewall application-rule create \
-  --resource-group myResourceGroup \
-  --firewall-name myFirewall \
-  --collection-name Allow-Azure-Management \
-  --priority 100 \
-  --action Allow \
-  --name Allow-ARM \
-  --source-addresses '*' \
-  --protocols Https=443 \
-  --fqdn-tags AzureResourceManager AzureActiveDirectory
-```
-
-#### Terraform
-
-```hcl
-resource "azurerm_firewall_application_rule_collection" "azure_management" {
-  name                = "Allow-Azure-Management"
-  azure_firewall_name = azurerm_firewall.main.name
-  resource_group_name = azurerm_resource_group.main.name
-  priority            = 100
-  action              = "Allow"
-
-  rule {
-    name = "Allow-ARM"
-    source_addresses = ["*"]
-    
-    fqdn_tags = [
-      "AzureResourceManager",
-      "AzureActiveDirectory"
-    ]
-  }
-}
-```
-
-### 특정 FQDN만 허용 (최소 권한 원칙)
-
-FQDN Tag 대신 특정 도메인만 허용하려는 경우:
-
-```
-최소 필수 FQDN:
-1. management.azure.com (필수)
-2. login.microsoftonline.com (선택적, Azure CLI 일부 명령에서 필요)
-3. graph.microsoft.com (선택적, Graph API 사용 시)
-```
-
-#### Azure Portal 설정
-
-```
-Rule 추가:
-  Name: Allow-Specific-Management
-  Source Type: IP Address
-  Source: * (또는 특정 서브넷)
-  Protocol: https:443
-  Target Type: FQDN
-  Target FQDNs:
-    - management.azure.com
-    - login.microsoftonline.com
-```
 
 ## 빠른 진단 루틴
 
@@ -315,352 +187,6 @@ az login --identity 실패
     완료
 ```
 
-## 실전 시나리오 및 해결 예시
-
-### 시나리오 1: GitHub Self-hosted Runner VM
-
-#### 환경
-
-```
-- Runner VM: Private Subnet (10.0.4.0/24)
-- System-assigned Managed Identity 활성화
-- UDR: 0.0.0.0/0 → Azure Firewall
-- 용도: Azure CLI로 리소스 배포
-```
-
-#### 문제
-
-```bash
-# Runner 스크립트
-az login --identity
-az vm list
-
-# 에러
-ERROR: Failed to connect to MSI. Please make sure MSI is configured correctly.
-또는
-Timeout when getting token from IMDS
-```
-
-#### 해결
-
-**1. IMDS 확인**
-
-```bash
-curl -H "Metadata:true" "http://169.254.169.254/metadata/instance?api-version=2021-02-01"
-# → 성공 (IMDS는 작동함)
-```
-
-**2. Firewall Rule 추가**
-
-```
-Azure Firewall → Application Rules:
-  Name: Allow-Azure-Management-Runner
-  Source: 10.0.4.0/24
-  FQDN Tags: AzureResourceManager, AzureActiveDirectory
-  Protocol: HTTPS:443
-```
-
-**3. 재시도**
-
-```bash
-az login --identity
-# → 성공
-az vm list
-# → VM 목록 정상 출력
-```
-
-### 시나리오 2: Terraform 실행 VM
-
-#### 환경
-
-```
-- Terraform VM: Private Subnet (10.0.5.0/24)
-- System-assigned Managed Identity로 Terraform 인증
-- UDR: 0.0.0.0/0 → Azure Firewall
-- HTTP_PROXY 환경변수 설정됨 (기업 프록시)
-```
-
-#### 문제
-
-```bash
-terraform init
-terraform plan
-
-# 에러
-Error: Error building AzureRM Client: could not get authenticated token
-Error: Failed to get existing workspaces: autorest/azure: Service returned an error
-```
-
-#### 해결
-
-**1. IMDS 확인**
-
-```bash
-curl -H "Metadata:true" "http://169.254.169.254/metadata/instance?api-version=2021-02-01"
-# → 실패 (프록시를 거치려고 시도)
-```
-
-**2. 프록시 예외 추가**
-
-```bash
-# 기존 프록시 설정 확인
-echo $HTTP_PROXY
-# http://corpproxy.company.com:8080
-
-# NO_PROXY 설정
-export NO_PROXY="169.254.169.254,168.63.129.16,localhost,127.0.0.1"
-
-# IMDS 재확인
-curl -H "Metadata:true" "http://169.254.169.254/metadata/instance?api-version=2021-02-01"
-# → 성공
-```
-
-**3. Firewall Rule 추가**
-
-```
-Application Rule:
-  Source: 10.0.5.0/24
-  FQDN Tags: AzureResourceManager
-  Additional FQDNs:
-    - registry.terraform.io (Terraform Registry)
-    - releases.hashicorp.com (Provider 다운로드)
-```
-
-**4. 영구 설정**
-
-```bash
-# /etc/environment에 추가
-sudo tee -a /etc/environment <<EOF
-HTTP_PROXY=http://corpproxy.company.com:8080
-HTTPS_PROXY=http://corpproxy.company.com:8080
-NO_PROXY=169.254.169.254,168.63.129.16,localhost,127.0.0.1
-EOF
-
-# 재부팅 또는 재로그인
-terraform plan
-# → 성공
-```
-
-### 시나리오 3: Azure DevOps Agent VM
-
-#### 환경
-
-```
-- DevOps Agent: Private Subnet (10.0.6.0/24)
-- System-assigned Managed Identity
-- UDR: 0.0.0.0/0 → Azure Firewall
-- Pipeline에서 Azure CLI 태스크 사용
-```
-
-#### 문제
-
-```yaml
-# Pipeline YAML
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'MyServiceConnection'  # Managed Identity 기반
-    scriptType: bash
-    scriptLocation: inlineScript
-    inlineScript: |
-      az vm list --resource-group myRG
-
-# 에러
-ERROR: Please run 'az login' to setup account.
-```
-
-#### 해결
-
-**1. Service Connection 확인**
-
-Azure DevOps에서 Service Connection이 Managed Identity 기반인지 확인:
-- Service Connection Type: Azure Resource Manager
-- Authentication Method: Managed Identity
-
-**2. IMDS 및 ARM 테스트**
-
-Agent VM에 SSH 접속하여 테스트:
-
-```bash
-# IMDS
-curl -H "Metadata:true" "http://169.254.169.254/metadata/instance?api-version=2021-02-01"
-# → 성공
-
-# ARM
-az login --identity
-# → 실패 (Timeout)
-```
-
-**3. Firewall Rule 추가**
-
-```
-Application Rule:
-  Name: Allow-DevOps-Agent
-  Source: 10.0.6.0/24
-  FQDN Tags: AzureResourceManager, AzureActiveDirectory
-  Additional FQDNs:
-    - dev.azure.com (DevOps 서비스)
-    - vstsagentpackage.azureedge.net (Agent 업데이트)
-```
-
-**4. Pipeline 재실행**
-
-```bash
-# Pipeline 재실행
-# → 성공
-```
-
-## 추가 고려사항
-
-### Azure Services Tag를 사용한 Network Rule
-
-Application Rule 외에 Network Rule로도 설정 가능함 (덜 선호되지만 가능):
-
-```
-Network Rule:
-  Name: Allow-Azure-Management-Network
-  Source: 10.0.0.0/16
-  Destination: AzureCloud (Service Tag)
-  Protocol: TCP
-  Destination Ports: 443
-```
-
-**단점**:
-- Service Tag는 Azure의 모든 공인 IP 범위를 포함하므로 과도하게 넓음
-- Application Rule의 FQDN 기반 제어가 더 정밀하고 권장됨
-
-### Private Endpoint와의 관계
-
-`management.azure.com`에 Private Endpoint를 생성할 수는 없음:
-- ARM 엔드포인트는 Azure 공용 서비스다
-- Private Endpoint는 특정 리소스(Storage, SQL DB 등)에만 사용 가능
-
-따라서 Managed Identity 인증을 위해서는 반드시 Firewall에서 공용 엔드포인트 접근을 허용해야 한다.
-
-### Azure Firewall Premium과 TLS Inspection
-
-Azure Firewall Premium의 TLS Inspection을 사용하는 경우:
-
-**추가 고려사항**:
-1. IMDS 트래픽은 HTTP이므로 TLS Inspection 영향 없음
-2. ARM 트래픽은 HTTPS이지만, TLS Inspection을 활성화해도 대부분 문제없음
-3. 단, 일부 Azure 서비스는 Certificate Pinning을 사용하여 TLS Inspection 시 실패할 수 있음
-
-**권장 설정**:
-```
-TLS Inspection Policy:
-- Azure Management 트래픽은 Bypass 권장
-- Application Rule에서 AzureResourceManager Tag에 대해 TLS Inspection Bypass
-```
-
-### 다른 Azure Managed Services
-
-다음 서비스들도 Managed Identity를 사용하며 동일한 Firewall 설정이 필요하다:
-
-```
-1. App Service / Function App
-   - WEBSITE_ENABLE_SYNC_UPDATE_SITE 설정 사용 시
-   - Managed Identity로 Key Vault 접근 시
-
-2. Azure Kubernetes Service (AKS)
-   - Pod Identity 사용 시
-   - AAD Pod Identity 또는 Workload Identity
-
-3. Azure Container Instances (ACI)
-   - Managed Identity로 리소스 접근 시
-
-4. Azure Batch
-   - Managed Identity로 Storage 접근 시
-
-5. Azure Data Factory
-   - Managed Identity로 연결된 서비스 접근 시
-```
-
-모두 동일하게 `management.azure.com` 및 `login.microsoftonline.com` 접근이 필요하다.
-
-## 검증 방법
-
-모든 설정을 완료한 후 다음 방법으로 검증:
-
-### 1. 기본 로그인 테스트
-
-```bash
-az login --identity
-az account show
-
-# 성공 시 출력:
-{
-  "environmentName": "AzureCloud",
-  "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-  "isDefault": true,
-  "name": "My Subscription",
-  "state": "Enabled",
-  "tenantId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-  "user": {
-    "assignedIdentity": {
-      "principalId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-      "tenantId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-    },
-    "name": "systemAssignedIdentity",
-    "type": "servicePrincipal"
-  }
-}
-```
-
-### 2. 리소스 조회 테스트
-
-```bash
-# VM 목록 조회
-az vm list --query "[].{Name:name, ResourceGroup:resourceGroup}" -o table
-
-# 리소스 그룹 목록
-az group list -o table
-
-# Storage Account 목록
-az storage account list -o table
-```
-
-### 3. Azure Firewall 로그 확인
-
-```
-Azure Portal → Firewall → Logs (Diagnostic Settings 활성화 필요)
-
-KQL 쿼리:
-AzureDiagnostics
-| where Category == "AzureFirewallApplicationRule"
-| where TimeGenerated > ago(1h)
-| where msg_s contains "management.azure.com"
-| project TimeGenerated, msg_s, Action, SourceIp, FQDN
-| order by TimeGenerated desc
-
-확인 사항:
-- Action: "Allow" 여부
-- FQDN: management.azure.com 매칭 여부
-- SourceIp: VM의 Private IP 확인
-```
-
-### 4. 네트워크 연결 테스트
-
-```bash
-# TCP 연결 테스트
-nc -zv management.azure.com 443
-
-# 또는 telnet
-telnet management.azure.com 443
-
-# 또는 curl
-curl -v https://management.azure.com
-
-# 성공 시:
-Connected to management.azure.com
-또는
-HTTP/1.1 401 Unauthorized (인증 없어도 연결은 성공)
-
-# 실패 시:
-Connection timed out
-또는
-Connection refused
-```
-
 ## 문제 해결 체크리스트
 
 Managed Identity 인증이 실패할 때 다음 순서로 확인:
@@ -680,8 +206,9 @@ Managed Identity 인증이 실패할 때 다음 순서로 확인:
   → Azure Portal → Route Table → Routes
   → 169.254.169.254/32 또는 168.63.129.16/32 경로 확인
 
-□ Azure Firewall Application Rule에 AzureResourceManager가 허용되어 있는가?
-  → Firewall → Application Rules 확인
+□ Azure Firewall에 management.azure.com 접근이 허용되어 있는가?
+  → Firewall → Network Rules 또는 Application Rules 확인
+  → Service Tag AzureCloud 또는 FQDN management.azure.com
 
 □ VM의 Subnet이 올바른 Route Table에 연결되어 있는가?
   → Subnet → Route Table 확인
@@ -697,67 +224,6 @@ Managed Identity 인증이 실패할 때 다음 순서로 확인:
   → 오래된 버전은 IMDS 관련 버그가 있을 수 있음
 ```
 
-## 일반적인 실수
-
-### 실수 1: "Managed Identity만 설정하면 되는 거 아닌가?"
-
-```
-❌ 잘못된 생각:
-"VM에 Managed Identity를 활성화했으니까 바로 사용할 수 있겠지?"
-
-✓ 올바른 이해:
-"Managed Identity는 VM 자체의 설정이고, 네트워크 통제(UDR, Firewall)가 있으면
-  ARM 엔드포인트 접근을 허용해야 함"
-```
-
-### 실수 2: "IMDS만 되면 되는 거 아닌가?"
-
-```
-❌ 잘못된 생각:
-"IMDS에서 토큰을 받으면 끝 아닌가?"
-
-✓ 올바른 이해:
-"az login --identity는 토큰을 받은 후 ARM API를 호출하여 구독 정보를 가져옴
-  따라서 management.azure.com도 허용해야 함"
-```
-
-### 실수 3: "Network Rule만 추가하면 되겠지?"
-
-```
-❌ 잘못된 설정:
-Azure Firewall Network Rule로 TCP 443만 허용
-
-문제:
-- Network Rule은 IP 기반 제어이므로 Azure의 모든 443 포트가 열림
-- 보안상 과도하게 넓은 허용
-
-✓ 올바른 설정:
-Application Rule에서 FQDN Tag(AzureResourceManager) 사용
-→ 특정 Azure 관리 엔드포인트만 허용
-```
-
-### 실수 4: "Private Endpoint로 해결할 수 있지 않나?"
-
-```
-❌ 잘못된 생각:
-"management.azure.com에 Private Endpoint를 만들면 되겠지?"
-
-✓ 올바른 이해:
-"ARM 엔드포인트는 Azure 공용 서비스로 Private Endpoint를 지원하지 않음
-  반드시 Firewall을 통한 공용 엔드포인트 접근이 필요함"
-```
-
-### 실수 5: "TLS Inspection 때문이 아닐까?"
-
-```
-❌ 잘못된 진단:
-"Azure Firewall Premium의 TLS Inspection 때문에 막힌 것 같은데?"
-
-✓ 올바른 진단:
-"TLS Inspection보다 Application Rule 자체가 없어서 차단된 경우가 훨씬 많음
-  먼저 Application Rule 추가하고, 그래도 안 되면 TLS Inspection 확인"
-```
-
 ## 요약
 
 ### 핵심 포인트
@@ -771,8 +237,8 @@ Application Rule에서 FQDN Tag(AzureResourceManager) 사용
    - UDR로 라우팅하면 안 됨
 
 3. **ARM 접근은 Firewall 허용 필요**
-   - Application Rule에 AzureResourceManager FQDN Tag 권장
-   - 최소한 management.azure.com:443 허용
+   - Network Rule에 AzureCloud Service Tag 사용 권장
+   - 또는 Application Rule에 management.azure.com:443 허용
 
 4. **진단은 단계적으로**
    - IMDS 테스트 → ARM 테스트 → az login 재시도
@@ -789,11 +255,10 @@ Route Table:
 ✓ 0.0.0.0/0 → Azure Firewall (워크로드 트래픽용)
 ✗ 169.254.169.254/32 경로 추가하지 말 것
 
-Azure Firewall Application Rule:
-✓ FQDN Tag: AzureResourceManager (권장)
-✓ FQDN Tag: AzureActiveDirectory (선택적)
+Azure Firewall Rule:
+✓ Network Rule: Service Tag AzureCloud, TCP 443 (권장)
   또는
-✓ 특정 FQDN: management.azure.com (최소 구성)
+✓ Application Rule: management.azure.com:443 (최소 구성)
 
 검증:
 ✓ curl로 IMDS 테스트
