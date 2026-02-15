@@ -331,6 +331,6 @@ az account show --debug
 ### 관련 GitHub Issues
 
 Managed Identity와 네트워크 통제 관련 커뮤니티 이슈:
-- Azure CLI GitHub: Managed Identity timeout issues
-- Azure Firewall: FQDN Tag 업데이트 내역
-- Terraform Provider: Managed Identity authentication issues
+- [Azure CLI: Managed Identity timeout issues](https://github.com/Azure/azure-cli/issues?q=is%3Aissue+managed+identity+timeout)
+- [Azure Firewall: FQDN Tag documentation](https://github.com/MicrosoftDocs/azure-docs/blob/main/articles/firewall/fqdn-tags.md)
+- [Terraform azurerm Provider: Managed Identity authentication issues](https://github.com/hashicorp/terraform-provider-azurerm/issues?q=is%3Aissue+managed+identity+authentication)
