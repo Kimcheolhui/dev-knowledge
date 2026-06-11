@@ -1,0 +1,13 @@
+apiVersion: alb.networking.azure.io/v1
+kind: WebApplicationFirewallPolicy
+metadata:
+  name: lab-waf-policy
+  namespace: agc-lab
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: basic-route
+    namespace: agc-lab
+  webApplicationFirewall:
+    id: "${WAF_POLICY_ID}"

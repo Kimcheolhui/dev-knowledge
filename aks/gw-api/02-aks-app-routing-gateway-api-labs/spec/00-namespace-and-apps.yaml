@@ -1,0 +1,131 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: approuting-lab
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: echo-server
+  namespace: approuting-lab
+data:
+  server.py: |
+    import json
+    import os
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+
+    app_name = os.environ.get("APP_NAME", "unknown")
+
+    class Handler(BaseHTTPRequestHandler):
+        def _handle(self):
+            body = {
+                "app": app_name,
+                "method": self.command,
+                "path": self.path,
+                "host": self.headers.get("Host"),
+                "headers": {key: self.headers.get(key) for key in self.headers.keys()},
+            }
+            payload = json.dumps(body, indent=2).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("X-App-Name", app_name)
+            self.end_headers()
+            self.wfile.write(payload)
+
+        def do_GET(self):
+            self._handle()
+
+        def do_POST(self):
+            self._handle()
+
+    HTTPServer(("0.0.0.0", 8080), Handler).serve_forever()
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-v1
+  namespace: approuting-lab
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web-v1
+  template:
+    metadata:
+      labels:
+        app: web-v1
+    spec:
+      containers:
+        - name: echo
+          image: python:3.12-alpine
+          command: ["python", "/app/server.py"]
+          env:
+            - name: APP_NAME
+              value: web-v1
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: echo-server
+              mountPath: /app
+      volumes:
+        - name: echo-server
+          configMap:
+            name: echo-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-v1
+  namespace: approuting-lab
+spec:
+  selector:
+    app: web-v1
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-v1
+  namespace: approuting-lab
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api-v1
+  template:
+    metadata:
+      labels:
+        app: api-v1
+    spec:
+      containers:
+        - name: echo
+          image: python:3.12-alpine
+          command: ["python", "/app/server.py"]
+          env:
+            - name: APP_NAME
+              value: api-v1
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: echo-server
+              mountPath: /app
+      volumes:
+        - name: echo-server
+          configMap:
+            name: echo-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-v1
+  namespace: approuting-lab
+spec:
+  selector:
+    app: api-v1
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080

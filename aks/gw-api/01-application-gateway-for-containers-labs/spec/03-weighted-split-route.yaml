@@ -1,0 +1,18 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: weighted-split-route
+  namespace: agc-lab
+spec:
+  parentRefs:
+    - name: agc-lab-gateway
+  hostnames:
+    - split.example.com
+  rules:
+    - backendRefs:
+        - name: store-v1
+          port: 8080
+          weight: 80
+        - name: store-v2
+          port: 8080
+          weight: 20

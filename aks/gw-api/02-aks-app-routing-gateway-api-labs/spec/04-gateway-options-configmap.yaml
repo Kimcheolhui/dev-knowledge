@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apr-lab-gw-options
+  namespace: approuting-lab
+data:
+  deployment: |
+    metadata:
+      labels:
+        lab.gw-api.azure/config: "per-gateway"
+  horizontalPodAutoscaler: |
+    spec:
+      minReplicas: 2
+      maxReplicas: 4
+  podDisruptionBudget: |
+    spec:
+      minAvailable: 1
