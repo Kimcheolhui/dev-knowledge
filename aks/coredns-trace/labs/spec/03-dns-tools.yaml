@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dns-tools
+  namespace: trace-lab
+  labels:
+    app: dns-tools
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dns-tools
+  template:
+    metadata:
+      labels:
+        app: dns-tools
+    spec:
+      containers:
+        - name: dns-tools
+          image: nicolaka/netshoot:latest
+          command:
+            - sleep
+            - infinity

@@ -1,0 +1,551 @@
+[
+  [
+    {
+      "traceId": "241ac4b4ee0b6d68",
+      "parentId": "7ff03d481113d5d7",
+      "id": "3bd27c7c51bcd7f5",
+      "name": "cache",
+      "timestamp": 1781242261095378,
+      "duration": 121,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "241ac4b4ee0b6d68",
+      "parentId": "6256253b064386e6",
+      "id": "7ff03d481113d5d7",
+      "name": "loadbalance",
+      "timestamp": 1781242261095377,
+      "duration": 132,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "241ac4b4ee0b6d68",
+      "parentId": "4b79dec079f8738a",
+      "id": "6256253b064386e6",
+      "name": "errors",
+      "timestamp": 1781242261095374,
+      "duration": 142,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "241ac4b4ee0b6d68",
+      "parentId": "241ac4b4ee0b6d68",
+      "id": "4b79dec079f8738a",
+      "name": "prometheus",
+      "timestamp": 1781242261095354,
+      "duration": 198,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "241ac4b4ee0b6d68",
+      "id": "241ac4b4ee0b6d68",
+      "kind": "SERVER",
+      "name": "servedns",
+      "timestamp": 1781242261095347,
+      "duration": 220,
+      "localEndpoint": { "serviceName": "aks-coredns" },
+      "tags": {
+        "coredns.io/name": "api.github.com.",
+        "coredns.io/proto": "udp",
+        "coredns.io/rcode": "NOERROR",
+        "coredns.io/remote": "10.244.3.121",
+        "coredns.io/type": "A"
+      }
+    }
+  ],
+  [
+    {
+      "traceId": "76b4e52a331f5cbd",
+      "parentId": "49e31af768c17f47",
+      "id": "3697b03a014da069",
+      "name": "cache",
+      "timestamp": 1781242260904566,
+      "duration": 89,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "76b4e52a331f5cbd",
+      "parentId": "3a74b4f8134acf87",
+      "id": "49e31af768c17f47",
+      "name": "loadbalance",
+      "timestamp": 1781242260904565,
+      "duration": 92,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "76b4e52a331f5cbd",
+      "parentId": "1eb686b40ea20a60",
+      "id": "3a74b4f8134acf87",
+      "name": "errors",
+      "timestamp": 1781242260904563,
+      "duration": 98,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "76b4e52a331f5cbd",
+      "parentId": "76b4e52a331f5cbd",
+      "id": "1eb686b40ea20a60",
+      "name": "prometheus",
+      "timestamp": 1781242260904550,
+      "duration": 117,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "76b4e52a331f5cbd",
+      "id": "76b4e52a331f5cbd",
+      "kind": "SERVER",
+      "name": "servedns",
+      "timestamp": 1781242260904545,
+      "duration": 128,
+      "localEndpoint": { "serviceName": "aks-coredns" },
+      "tags": {
+        "coredns.io/name": "kubernetes.default.svc.cluster.local.",
+        "coredns.io/proto": "udp",
+        "coredns.io/rcode": "NOERROR",
+        "coredns.io/remote": "10.244.3.121",
+        "coredns.io/type": "A"
+      }
+    }
+  ],
+  [
+    {
+      "traceId": "522dfec2d5fb5cc6",
+      "parentId": "5b1edf2588e7ff79",
+      "id": "61781d0dad3520ea",
+      "name": "cache",
+      "timestamp": 1781242260826706,
+      "duration": 123,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "522dfec2d5fb5cc6",
+      "parentId": "5611face5ac3e195",
+      "id": "5b1edf2588e7ff79",
+      "name": "loadbalance",
+      "timestamp": 1781242260826704,
+      "duration": 145,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "522dfec2d5fb5cc6",
+      "parentId": "3f9fff98f8dd90bc",
+      "id": "5611face5ac3e195",
+      "name": "errors",
+      "timestamp": 1781242260826702,
+      "duration": 154,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "522dfec2d5fb5cc6",
+      "parentId": "522dfec2d5fb5cc6",
+      "id": "3f9fff98f8dd90bc",
+      "name": "prometheus",
+      "timestamp": 1781242260826650,
+      "duration": 224,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "522dfec2d5fb5cc6",
+      "id": "522dfec2d5fb5cc6",
+      "kind": "SERVER",
+      "name": "servedns",
+      "timestamp": 1781242260826644,
+      "duration": 241,
+      "localEndpoint": { "serviceName": "aks-coredns" },
+      "tags": {
+        "coredns.io/name": "www.microsoft.com.",
+        "coredns.io/proto": "udp",
+        "coredns.io/rcode": "NOERROR",
+        "coredns.io/remote": "10.244.3.121",
+        "coredns.io/type": "A"
+      }
+    }
+  ],
+  [
+    {
+      "traceId": "4e10416f13b1610f",
+      "parentId": "095da83536a50a57",
+      "id": "0f7429b9a116e2b5",
+      "name": "cache",
+      "timestamp": 1781242260602318,
+      "duration": 152,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "4e10416f13b1610f",
+      "parentId": "4725361c10e6db06",
+      "id": "095da83536a50a57",
+      "name": "loadbalance",
+      "timestamp": 1781242260602316,
+      "duration": 163,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "4e10416f13b1610f",
+      "parentId": "58f7b812ddec1fd2",
+      "id": "4725361c10e6db06",
+      "name": "errors",
+      "timestamp": 1781242260602315,
+      "duration": 173,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "4e10416f13b1610f",
+      "parentId": "4e10416f13b1610f",
+      "id": "58f7b812ddec1fd2",
+      "name": "prometheus",
+      "timestamp": 1781242260602297,
+      "duration": 207,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "4e10416f13b1610f",
+      "id": "4e10416f13b1610f",
+      "kind": "SERVER",
+      "name": "servedns",
+      "timestamp": 1781242260602292,
+      "duration": 227,
+      "localEndpoint": { "serviceName": "aks-coredns" },
+      "tags": {
+        "coredns.io/name": "kubernetes.default.svc.cluster.local.",
+        "coredns.io/proto": "udp",
+        "coredns.io/rcode": "NOERROR",
+        "coredns.io/remote": "10.244.3.121",
+        "coredns.io/type": "A"
+      }
+    }
+  ],
+  [
+    {
+      "traceId": "19d18655752fa100",
+      "parentId": "448838a91e682f55",
+      "id": "02bab18d6c604777",
+      "name": "cache",
+      "timestamp": 1781242260525878,
+      "duration": 79,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "19d18655752fa100",
+      "parentId": "0a9012bb0d4b3f6a",
+      "id": "448838a91e682f55",
+      "name": "loadbalance",
+      "timestamp": 1781242260525877,
+      "duration": 93,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "19d18655752fa100",
+      "parentId": "43057e2fdc854eeb",
+      "id": "0a9012bb0d4b3f6a",
+      "name": "errors",
+      "timestamp": 1781242260525876,
+      "duration": 99,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "19d18655752fa100",
+      "parentId": "19d18655752fa100",
+      "id": "43057e2fdc854eeb",
+      "name": "prometheus",
+      "timestamp": 1781242260525865,
+      "duration": 118,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "19d18655752fa100",
+      "id": "19d18655752fa100",
+      "kind": "SERVER",
+      "name": "servedns",
+      "timestamp": 1781242260525859,
+      "duration": 134,
+      "localEndpoint": { "serviceName": "aks-coredns" },
+      "tags": {
+        "coredns.io/name": "www.microsoft.com.",
+        "coredns.io/proto": "udp",
+        "coredns.io/rcode": "NOERROR",
+        "coredns.io/remote": "10.244.3.121",
+        "coredns.io/type": "A"
+      }
+    }
+  ],
+  [
+    {
+      "traceId": "561f2bafbd17ff58",
+      "parentId": "086577a7c095ade4",
+      "id": "78471d14be763fb4",
+      "name": "cache",
+      "timestamp": 1781242260301260,
+      "duration": 121,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "561f2bafbd17ff58",
+      "parentId": "286c17291235afbb",
+      "id": "086577a7c095ade4",
+      "name": "loadbalance",
+      "timestamp": 1781242260301258,
+      "duration": 134,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "561f2bafbd17ff58",
+      "parentId": "7b7e944f62ea72ab",
+      "id": "286c17291235afbb",
+      "name": "errors",
+      "timestamp": 1781242260301255,
+      "duration": 145,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "561f2bafbd17ff58",
+      "parentId": "561f2bafbd17ff58",
+      "id": "7b7e944f62ea72ab",
+      "name": "prometheus",
+      "timestamp": 1781242260301237,
+      "duration": 181,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "561f2bafbd17ff58",
+      "id": "561f2bafbd17ff58",
+      "kind": "SERVER",
+      "name": "servedns",
+      "timestamp": 1781242260301231,
+      "duration": 197,
+      "localEndpoint": { "serviceName": "aks-coredns" },
+      "tags": {
+        "coredns.io/name": "kubernetes.default.svc.cluster.local.",
+        "coredns.io/proto": "udp",
+        "coredns.io/rcode": "NOERROR",
+        "coredns.io/remote": "10.244.3.121",
+        "coredns.io/type": "A"
+      }
+    }
+  ],
+  [
+    {
+      "traceId": "6fdea82384bc469c",
+      "parentId": "29c0a4f7a12f245f",
+      "id": "6c0853a3936772b1",
+      "name": "cache",
+      "timestamp": 1781242260210892,
+      "duration": 94,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "6fdea82384bc469c",
+      "parentId": "12c18bc19bf1cf0a",
+      "id": "29c0a4f7a12f245f",
+      "name": "loadbalance",
+      "timestamp": 1781242260210890,
+      "duration": 100,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "6fdea82384bc469c",
+      "parentId": "670813c2bf5e8dc8",
+      "id": "12c18bc19bf1cf0a",
+      "name": "errors",
+      "timestamp": 1781242260210889,
+      "duration": 109,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "6fdea82384bc469c",
+      "parentId": "6fdea82384bc469c",
+      "id": "670813c2bf5e8dc8",
+      "name": "prometheus",
+      "timestamp": 1781242260210879,
+      "duration": 132,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "6fdea82384bc469c",
+      "id": "6fdea82384bc469c",
+      "kind": "SERVER",
+      "name": "servedns",
+      "timestamp": 1781242260210874,
+      "duration": 152,
+      "localEndpoint": { "serviceName": "aks-coredns" },
+      "tags": {
+        "coredns.io/name": "kubernetes.default.svc.cluster.local.",
+        "coredns.io/proto": "udp",
+        "coredns.io/rcode": "NOERROR",
+        "coredns.io/remote": "10.244.3.121",
+        "coredns.io/type": "A"
+      }
+    }
+  ],
+  [
+    {
+      "traceId": "1208fd9a367255e2",
+      "parentId": "27d5e63278617319",
+      "id": "1dfbccd584c4f549",
+      "name": "cache",
+      "timestamp": 1781242260144918,
+      "duration": 107,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "1208fd9a367255e2",
+      "parentId": "65f88abed02dd0ff",
+      "id": "27d5e63278617319",
+      "name": "loadbalance",
+      "timestamp": 1781242260144916,
+      "duration": 119,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "1208fd9a367255e2",
+      "parentId": "65e9159ef14180b8",
+      "id": "65f88abed02dd0ff",
+      "name": "errors",
+      "timestamp": 1781242260144915,
+      "duration": 127,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "1208fd9a367255e2",
+      "parentId": "1208fd9a367255e2",
+      "id": "65e9159ef14180b8",
+      "name": "prometheus",
+      "timestamp": 1781242260144901,
+      "duration": 153,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "1208fd9a367255e2",
+      "id": "1208fd9a367255e2",
+      "kind": "SERVER",
+      "name": "servedns",
+      "timestamp": 1781242260144896,
+      "duration": 169,
+      "localEndpoint": { "serviceName": "aks-coredns" },
+      "tags": {
+        "coredns.io/name": "www.microsoft.com.",
+        "coredns.io/proto": "udp",
+        "coredns.io/rcode": "NOERROR",
+        "coredns.io/remote": "10.244.3.121",
+        "coredns.io/type": "A"
+      }
+    }
+  ],
+  [
+    {
+      "traceId": "0c3a61d17598c291",
+      "parentId": "676310eb4a2a1fc6",
+      "id": "12f809d39a46dafe",
+      "name": "cache",
+      "timestamp": 1781242259979413,
+      "duration": 115,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "0c3a61d17598c291",
+      "parentId": "071e3b08f26c3bbc",
+      "id": "676310eb4a2a1fc6",
+      "name": "loadbalance",
+      "timestamp": 1781242259979412,
+      "duration": 124,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "0c3a61d17598c291",
+      "parentId": "152be28264cd316b",
+      "id": "071e3b08f26c3bbc",
+      "name": "errors",
+      "timestamp": 1781242259979411,
+      "duration": 131,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "0c3a61d17598c291",
+      "parentId": "0c3a61d17598c291",
+      "id": "152be28264cd316b",
+      "name": "prometheus",
+      "timestamp": 1781242259979395,
+      "duration": 161,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "0c3a61d17598c291",
+      "id": "0c3a61d17598c291",
+      "kind": "SERVER",
+      "name": "servedns",
+      "timestamp": 1781242259979391,
+      "duration": 178,
+      "localEndpoint": { "serviceName": "aks-coredns" },
+      "tags": {
+        "coredns.io/name": "www.microsoft.com.",
+        "coredns.io/proto": "udp",
+        "coredns.io/rcode": "NOERROR",
+        "coredns.io/remote": "10.244.3.121",
+        "coredns.io/type": "A"
+      }
+    }
+  ],
+  [
+    {
+      "traceId": "31d606d0efd1ab46",
+      "parentId": "6ff3176c9561e6ad",
+      "id": "7d63b37daf9efb5a",
+      "name": "template",
+      "timestamp": 1781242256844289,
+      "duration": 239,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "31d606d0efd1ab46",
+      "parentId": "44fb222f8dfcf98b",
+      "id": "6ff3176c9561e6ad",
+      "name": "cache",
+      "timestamp": 1781242256844281,
+      "duration": 249,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "31d606d0efd1ab46",
+      "parentId": "2ab248d743a3a07e",
+      "id": "44fb222f8dfcf98b",
+      "name": "loadbalance",
+      "timestamp": 1781242256844279,
+      "duration": 256,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "31d606d0efd1ab46",
+      "parentId": "443cfcff7bb90170",
+      "id": "2ab248d743a3a07e",
+      "name": "errors",
+      "timestamp": 1781242256844277,
+      "duration": 259,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "31d606d0efd1ab46",
+      "parentId": "31d606d0efd1ab46",
+      "id": "443cfcff7bb90170",
+      "name": "prometheus",
+      "timestamp": 1781242256844261,
+      "duration": 295,
+      "localEndpoint": { "serviceName": "aks-coredns" }
+    },
+    {
+      "traceId": "31d606d0efd1ab46",
+      "id": "31d606d0efd1ab46",
+      "kind": "SERVER",
+      "name": "servedns",
+      "timestamp": 1781242256844255,
+      "duration": 310,
+      "localEndpoint": { "serviceName": "aks-coredns" },
+      "tags": {
+        "coredns.io/name": "dc.services.visualstudio.com.4bbzk525ohhuvj2r35l3z53jpc.syx.internal.cloudapp.net.",
+        "coredns.io/proto": "udp",
+        "coredns.io/rcode": "NXDOMAIN",
+        "coredns.io/remote": "10.244.1.60",
+        "coredns.io/type": "AAAA"
+      }
+    }
+  ]
+]

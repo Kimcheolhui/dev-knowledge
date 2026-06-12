@@ -1,0 +1,5 @@
+{
+  "data": {
+    "trace.override": "trace zipkin http://10.1.10.104:9411/api/v2/spans {\n  every 10\n  service aks-coredns\n}\n"
+  }
+}

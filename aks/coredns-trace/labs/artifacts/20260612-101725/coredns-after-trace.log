@@ -1,0 +1,8 @@
+maxprocs: Honoring GOMAXPROCS="3" as set in environment
+[WARNING] No files matching import glob pattern: custom/*.server
+.:53
+[WARNING] No files matching import glob pattern: custom/*.server
+[INFO] plugin/reload: Running configuration SHA512 = 42716556a37ab4fc92fce54ddabfb533e2b35b9f2cb466066229051bd2056cd72eab403337a58042d61ed22ee54bd69b86bf700c3068d6646c1825dcceeee15f
+CoreDNS-1.13.1
+linux/amd64, go1.26.2, 1db4568df6aaacda6ebbce87717156bd855f8103
+[WARNING] No files matching import glob pattern: custom/*.server

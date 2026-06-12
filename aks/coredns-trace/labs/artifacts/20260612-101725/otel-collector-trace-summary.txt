@@ -1,0 +1,1249 @@
+2026-06-12T05:55:19.753Z	info	otelconftelemetry/tracer.go:47	Internal trace telemetry disabled	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}}
+2026-06-12T05:55:19.754Z	info	service@v0.154.0/service.go:241	Starting otelcol-contrib...	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "Version": "0.154.0", "NumCPU": 4}
+2026-06-12T05:55:19.754Z	info	extensions/extensions.go:41	Starting extensions...	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}}
+2026-06-12T05:55:19.755Z	info	otlpreceiver@v0.154.0/otlp.go:120	Starting GRPC server	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "otlp", "otelcol.component.kind": "receiver", "endpoint": "[::]:4317"}
+2026-06-12T05:55:19.755Z	info	otlpreceiver@v0.154.0/otlp.go:175	Starting HTTP server	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "otlp", "otelcol.component.kind": "receiver", "endpoint": "[::]:4318"}
+2026-06-12T05:55:19.755Z	info	service@v0.154.0/service.go:264	Everything is ready. Begin running and processing data.	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}}
+2026-06-12T05:56:11.839Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 7}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000000c89639ede3e16e4
+    Parent ID      : 
+    Trace ID       : 00000000000000000c89639ede3e16e4
+    Parent ID      : 0c89639ede3e16e4
+    Trace ID       : 00000000000000000c89639ede3e16e4
+    Parent ID      : 26b7f7b0a3f1f7ae
+    Trace ID       : 00000000000000000c89639ede3e16e4
+    Parent ID      : 69ff90b068c3d47b
+    Trace ID       : 00000000000000000c89639ede3e16e4
+    Parent ID      : 3b2520b2533eb6c7
+    Trace ID       : 00000000000000000c89639ede3e16e4
+    Parent ID      : 7199e39a8b93cea9
+    Trace ID       : 00000000000000000c89639ede3e16e4
+    Parent ID      : 0dd2a95636279193
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:56:22.256Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 5}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 000000000000000052d12ad508a043c7
+    Parent ID      : 
+    Trace ID       : 000000000000000052d12ad508a043c7
+    Parent ID      : 52d12ad508a043c7
+    Trace ID       : 000000000000000052d12ad508a043c7
+    Parent ID      : 1f74c4cc7c9a0c5e
+    Trace ID       : 000000000000000052d12ad508a043c7
+    Parent ID      : 084a873b251ec660
+    Trace ID       : 000000000000000052d12ad508a043c7
+    Parent ID      : 463fe924d9820455
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:56:22.457Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 7}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000001e9397439198f3d1
+    Parent ID      : 
+    Trace ID       : 00000000000000001e9397439198f3d1
+    Parent ID      : 1e9397439198f3d1
+    Trace ID       : 00000000000000001e9397439198f3d1
+    Parent ID      : 3821555558bead0a
+    Trace ID       : 00000000000000001e9397439198f3d1
+    Parent ID      : 119c89acb8a3e927
+    Trace ID       : 00000000000000001e9397439198f3d1
+    Parent ID      : 11423676e555051b
+    Trace ID       : 00000000000000001e9397439198f3d1
+    Parent ID      : 5bb4d48bd33a82f2
+    Trace ID       : 00000000000000001e9397439198f3d1
+    Parent ID      : 249e8e3693b28078
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:56:23.459Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 5}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000005ef1edcb1a05127e
+    Parent ID      : 
+    Trace ID       : 00000000000000005ef1edcb1a05127e
+    Parent ID      : 5ef1edcb1a05127e
+    Trace ID       : 00000000000000005ef1edcb1a05127e
+    Parent ID      : 6ab59ab33f812e86
+    Trace ID       : 00000000000000005ef1edcb1a05127e
+    Parent ID      : 3c1c48b8ccdb9da0
+    Trace ID       : 00000000000000005ef1edcb1a05127e
+    Parent ID      : 4684ac98ee984c97
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:56:25.463Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 7}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000006e13dbaf5ede9321
+    Parent ID      : 
+    Trace ID       : 00000000000000006e13dbaf5ede9321
+    Parent ID      : 6e13dbaf5ede9321
+    Trace ID       : 00000000000000006e13dbaf5ede9321
+    Parent ID      : 0a9b3c2ccd9eb351
+    Trace ID       : 00000000000000006e13dbaf5ede9321
+    Parent ID      : 7b21455728edd230
+    Trace ID       : 00000000000000006e13dbaf5ede9321
+    Parent ID      : 04fd8d7b846742a0
+    Trace ID       : 00000000000000006e13dbaf5ede9321
+    Parent ID      : 43d91d7dcb11e24b
+    Trace ID       : 00000000000000006e13dbaf5ede9321
+    Parent ID      : 0293671217984fa6
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:56:25.664Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 6}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000002364dc7dc0722eef
+    Parent ID      : 
+    Trace ID       : 00000000000000002364dc7dc0722eef
+    Parent ID      : 2364dc7dc0722eef
+    Trace ID       : 00000000000000002364dc7dc0722eef
+    Parent ID      : 192c052ab05c01a2
+    Trace ID       : 00000000000000002364dc7dc0722eef
+    Parent ID      : 61157724ccbd70c4
+    Trace ID       : 00000000000000002364dc7dc0722eef
+    Parent ID      : 219b62a18810b2bc
+    Trace ID       : 00000000000000002364dc7dc0722eef
+    Parent ID      : 1ae1eea1d85bd52a
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:56:31.674Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 6}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000004ed558630057f056
+    Parent ID      : 
+    Trace ID       : 00000000000000004ed558630057f056
+    Parent ID      : 4ed558630057f056
+    Trace ID       : 00000000000000004ed558630057f056
+    Parent ID      : 106bb5e0444c7f4c
+    Trace ID       : 00000000000000004ed558630057f056
+    Parent ID      : 15ff90ba7086fa5b
+    Trace ID       : 00000000000000004ed558630057f056
+    Parent ID      : 6f56ff035ff840a3
+    Trace ID       : 00000000000000004ed558630057f056
+    Parent ID      : 6b3d0db92ddaebb8
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:56:37.684Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 5}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 000000000000000019f05076e79df0d6
+    Parent ID      : 
+    Trace ID       : 000000000000000019f05076e79df0d6
+    Parent ID      : 19f05076e79df0d6
+    Trace ID       : 000000000000000019f05076e79df0d6
+    Parent ID      : 08df5137524ce540
+    Trace ID       : 000000000000000019f05076e79df0d6
+    Parent ID      : 14f4c10302e4410d
+    Trace ID       : 000000000000000019f05076e79df0d6
+    Parent ID      : 129e55937d1da7a5
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:56:42.092Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 7}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000007dcf5880b96de73c
+    Parent ID      : 
+    Trace ID       : 00000000000000007dcf5880b96de73c
+    Parent ID      : 7dcf5880b96de73c
+    Trace ID       : 00000000000000007dcf5880b96de73c
+    Parent ID      : 4625fe57e4d0d881
+    Trace ID       : 00000000000000007dcf5880b96de73c
+    Parent ID      : 7583dd6e7263994a
+    Trace ID       : 00000000000000007dcf5880b96de73c
+    Parent ID      : 09938a8bf7479057
+    Trace ID       : 00000000000000007dcf5880b96de73c
+    Parent ID      : 0ef19d241772d5bd
+    Trace ID       : 00000000000000007dcf5880b96de73c
+    Parent ID      : 53aa01359f7d8712
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:56:43.294Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 7}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000000400fb044f4c4bd5
+    Parent ID      : 
+    Trace ID       : 00000000000000000400fb044f4c4bd5
+    Parent ID      : 0400fb044f4c4bd5
+    Trace ID       : 00000000000000000400fb044f4c4bd5
+    Parent ID      : 741da61d6eb10907
+    Trace ID       : 00000000000000000400fb044f4c4bd5
+    Parent ID      : 78e27f625f36ebdc
+    Trace ID       : 00000000000000000400fb044f4c4bd5
+    Parent ID      : 4877a36bbf5a3a8d
+    Trace ID       : 00000000000000000400fb044f4c4bd5
+    Parent ID      : 7c7fed7f08421b8d
+    Trace ID       : 00000000000000000400fb044f4c4bd5
+    Parent ID      : 79bf1d8dece48b7f
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:56:44.096Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 10}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000004d787c5fddbedb47
+    Parent ID      : 
+    Trace ID       : 00000000000000004d787c5fddbedb47
+    Parent ID      : 4d787c5fddbedb47
+    Trace ID       : 00000000000000004d787c5fddbedb47
+    Parent ID      : 11d7914df4563a01
+    Trace ID       : 00000000000000004d787c5fddbedb47
+    Parent ID      : 4d56ad01f5f73b49
+    Trace ID       : 00000000000000004d787c5fddbedb47
+    Parent ID      : 598d73b66c538e99
+    Trace ID       : 00000000000000004d787c5fddbedb47
+    Parent ID      : 6bd39e7624ba2c18
+    Trace ID       : 00000000000000004d787c5fddbedb47
+    Parent ID      : 5d9c0170205a1d84
+    Trace ID       : 00000000000000004d787c5fddbedb47
+    Parent ID      : 03beb3c221ed46b0
+    Trace ID       : 00000000000000004d787c5fddbedb47
+    Parent ID      : 23694afe129b4145
+    Trace ID       : 00000000000000004d787c5fddbedb47
+    Parent ID      : 31cca89a70f90d7a
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:56:48.504Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 7}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 000000000000000013267d7e8bfb8658
+    Parent ID      : 
+    Trace ID       : 000000000000000013267d7e8bfb8658
+    Parent ID      : 13267d7e8bfb8658
+    Trace ID       : 000000000000000013267d7e8bfb8658
+    Parent ID      : 05b2982b58c281fd
+    Trace ID       : 000000000000000013267d7e8bfb8658
+    Parent ID      : 13a061b934145622
+    Trace ID       : 000000000000000013267d7e8bfb8658
+    Parent ID      : 694fd523986c137e
+    Trace ID       : 000000000000000013267d7e8bfb8658
+    Parent ID      : 1ecf7aa9fd0e5b01
+    Trace ID       : 000000000000000013267d7e8bfb8658
+    Parent ID      : 3556a8bf2a3a8d1a
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:56:56.918Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 5}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000006e7f88d7e7f737c6
+    Parent ID      : 
+    Trace ID       : 00000000000000006e7f88d7e7f737c6
+    Parent ID      : 6e7f88d7e7f737c6
+    Trace ID       : 00000000000000006e7f88d7e7f737c6
+    Parent ID      : 2eaa9e0501d3cea3
+    Trace ID       : 00000000000000006e7f88d7e7f737c6
+    Parent ID      : 376924f47a087f18
+    Trace ID       : 00000000000000006e7f88d7e7f737c6
+    Parent ID      : 3492788438077655
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:56:57.119Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 10}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000002dbff0892791817d
+    Parent ID      : 
+    Trace ID       : 00000000000000002dbff0892791817d
+    Parent ID      : 2dbff0892791817d
+    Trace ID       : 00000000000000002dbff0892791817d
+    Parent ID      : 6db3e174d681e638
+    Trace ID       : 00000000000000002dbff0892791817d
+    Parent ID      : 6d5fce5741eac4b3
+    Trace ID       : 00000000000000002dbff0892791817d
+    Parent ID      : 09f36600ae39abcd
+    Trace ID       : 00000000000000002dbff0892791817d
+    Parent ID      : 4b5faec6c8701e56
+    Trace ID       : 00000000000000002dbff0892791817d
+    Parent ID      : 02a8071cd86d2a1e
+    Trace ID       : 00000000000000002dbff0892791817d
+    Parent ID      : 644feb1aaec0f9d6
+    Trace ID       : 00000000000000002dbff0892791817d
+    Parent ID      : 1da58ec578dc0f15
+    Trace ID       : 00000000000000002dbff0892791817d
+    Parent ID      : 27c4eabb0df2e0ad
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:02.127Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 7}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 000000000000000073fcb887052eba65
+    Parent ID      : 
+    Trace ID       : 000000000000000073fcb887052eba65
+    Parent ID      : 73fcb887052eba65
+    Trace ID       : 000000000000000073fcb887052eba65
+    Parent ID      : 1ab459654984c00c
+    Trace ID       : 000000000000000073fcb887052eba65
+    Parent ID      : 4f5510dafc80a852
+    Trace ID       : 000000000000000073fcb887052eba65
+    Parent ID      : 2e70a98f0115cdcc
+    Trace ID       : 000000000000000073fcb887052eba65
+    Parent ID      : 69406242886da821
+    Trace ID       : 000000000000000073fcb887052eba65
+    Parent ID      : 649af904cfb118fa
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:08.738Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 7}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000005df47d18daa92d45
+    Parent ID      : 
+    Trace ID       : 00000000000000005df47d18daa92d45
+    Parent ID      : 5df47d18daa92d45
+    Trace ID       : 00000000000000005df47d18daa92d45
+    Parent ID      : 5907f3a481170d02
+    Trace ID       : 00000000000000005df47d18daa92d45
+    Parent ID      : 542463366cf5630b
+    Trace ID       : 00000000000000005df47d18daa92d45
+    Parent ID      : 1c20a32751a64c08
+    Trace ID       : 00000000000000005df47d18daa92d45
+    Parent ID      : 3f1d34b5930f3e06
+    Trace ID       : 00000000000000005df47d18daa92d45
+    Parent ID      : 379f3612c105c496
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:11.944Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 6}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000001617c6d08c6e54de
+    Parent ID      : 
+    Trace ID       : 00000000000000001617c6d08c6e54de
+    Parent ID      : 1617c6d08c6e54de
+    Trace ID       : 00000000000000001617c6d08c6e54de
+    Parent ID      : 66ebc8032e0e0ded
+    Trace ID       : 00000000000000001617c6d08c6e54de
+    Parent ID      : 5c351cbc63d43716
+    Trace ID       : 00000000000000001617c6d08c6e54de
+    Parent ID      : 1a4e3d5723717df0
+    Trace ID       : 00000000000000001617c6d08c6e54de
+    Parent ID      : 4b092f0e23c1724e
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:17.353Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 10}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000006e407c9dfc2b8a8a
+    Parent ID      : 
+    Trace ID       : 00000000000000006e407c9dfc2b8a8a
+    Parent ID      : 6e407c9dfc2b8a8a
+    Trace ID       : 00000000000000006e407c9dfc2b8a8a
+    Parent ID      : 7f824a4528617385
+    Trace ID       : 00000000000000006e407c9dfc2b8a8a
+    Parent ID      : 6e84af99f6f5e83c
+    Trace ID       : 00000000000000006e407c9dfc2b8a8a
+    Parent ID      : 44338aca3c155caa
+    Trace ID       : 00000000000000006e407c9dfc2b8a8a
+    Parent ID      : 34b87512390b2d9a
+    Trace ID       : 00000000000000006e407c9dfc2b8a8a
+    Parent ID      : 47da30864bafb4dc
+    Trace ID       : 00000000000000006e407c9dfc2b8a8a
+    Parent ID      : 05519b4f377b194d
+    Trace ID       : 00000000000000006e407c9dfc2b8a8a
+    Parent ID      : 2887d375bb388582
+    Trace ID       : 00000000000000006e407c9dfc2b8a8a
+    Parent ID      : 1ca8d940f9e68758
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:21.561Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 6}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 000000000000000040267ac43b77bd92
+    Parent ID      : 
+    Trace ID       : 000000000000000040267ac43b77bd92
+    Parent ID      : 40267ac43b77bd92
+    Trace ID       : 000000000000000040267ac43b77bd92
+    Parent ID      : 7f7217d2e25ef90c
+    Trace ID       : 000000000000000040267ac43b77bd92
+    Parent ID      : 6f648e49987822ed
+    Trace ID       : 000000000000000040267ac43b77bd92
+    Parent ID      : 119f0c0bca231c42
+    Trace ID       : 000000000000000040267ac43b77bd92
+    Parent ID      : 7b07cccc45fca79e
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:23.565Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 5}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000007683ddeb7e4664fe
+    Parent ID      : 
+    Trace ID       : 00000000000000007683ddeb7e4664fe
+    Parent ID      : 7683ddeb7e4664fe
+    Trace ID       : 00000000000000007683ddeb7e4664fe
+    Parent ID      : 4770a6745100ccaa
+    Trace ID       : 00000000000000007683ddeb7e4664fe
+    Parent ID      : 35574a16a575eed7
+    Trace ID       : 00000000000000007683ddeb7e4664fe
+    Parent ID      : 385b0b33922e60e1
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:25.769Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 2, "spans": 10}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000002db0925f88779c49
+    Parent ID      : 
+    Trace ID       : 00000000000000002db0925f88779c49
+    Parent ID      : 2db0925f88779c49
+    Trace ID       : 00000000000000002db0925f88779c49
+    Parent ID      : 36ba99dbaeb77d61
+    Trace ID       : 00000000000000002db0925f88779c49
+    Parent ID      : 3977fe5eec5829c5
+    Trace ID       : 00000000000000002db0925f88779c49
+    Parent ID      : 18f965e4aeab0b3c
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 0000000000000000165e000a036862bd
+    Parent ID      : 
+    Trace ID       : 0000000000000000165e000a036862bd
+    Parent ID      : 165e000a036862bd
+    Trace ID       : 0000000000000000165e000a036862bd
+    Parent ID      : 1a91414a8681045b
+    Trace ID       : 0000000000000000165e000a036862bd
+    Parent ID      : 6b330dace131cea9
+    Trace ID       : 0000000000000000165e000a036862bd
+    Parent ID      : 704d205b4cd84990
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:26.971Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 2, "spans": 16}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000007e3f95a86088ab8c
+    Parent ID      : 
+    Trace ID       : 00000000000000007e3f95a86088ab8c
+    Parent ID      : 7e3f95a86088ab8c
+    Trace ID       : 00000000000000007e3f95a86088ab8c
+    Parent ID      : 766bbac210fe9edf
+    Trace ID       : 00000000000000007e3f95a86088ab8c
+    Parent ID      : 79a3f90101d91042
+    Trace ID       : 00000000000000007e3f95a86088ab8c
+    Parent ID      : 0a2d25cda191b013
+    Trace ID       : 00000000000000007e3f95a86088ab8c
+    Parent ID      : 2924b6f1176be240
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000000f5abde10652d99b
+    Parent ID      : 
+    Trace ID       : 00000000000000000f5abde10652d99b
+    Parent ID      : 0f5abde10652d99b
+    Trace ID       : 00000000000000000f5abde10652d99b
+    Parent ID      : 76fb506cae5b3d0c
+    Trace ID       : 00000000000000000f5abde10652d99b
+    Parent ID      : 4c349f711b7cf30c
+    Trace ID       : 00000000000000000f5abde10652d99b
+    Parent ID      : 726faa2e09883700
+    Trace ID       : 0000000000000000151683e80e15eee4
+    Parent ID      : 
+    Trace ID       : 0000000000000000151683e80e15eee4
+    Parent ID      : 151683e80e15eee4
+    Trace ID       : 0000000000000000151683e80e15eee4
+    Parent ID      : 1135485b44621c45
+    Trace ID       : 0000000000000000151683e80e15eee4
+    Parent ID      : 6d4c930abda8f9da
+    Trace ID       : 0000000000000000151683e80e15eee4
+    Parent ID      : 2613d3bb03f17b17
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:33.382Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 2, "spans": 14}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000003d8ff56c20791e74
+    Parent ID      : 
+    Trace ID       : 00000000000000003d8ff56c20791e74
+    Parent ID      : 3d8ff56c20791e74
+    Trace ID       : 00000000000000003d8ff56c20791e74
+    Parent ID      : 7599f793009c480f
+    Trace ID       : 00000000000000003d8ff56c20791e74
+    Parent ID      : 47ea4d1f6dc07333
+    Trace ID       : 00000000000000003d8ff56c20791e74
+    Parent ID      : 510a931037d8b859
+    Trace ID       : 00000000000000003d8ff56c20791e74
+    Parent ID      : 6ab312786e92b24b
+    Trace ID       : 00000000000000003d8ff56c20791e74
+    Parent ID      : 2f22e017b3bd0673
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 0000000000000000391db4d3d8941fe4
+    Parent ID      : 
+    Trace ID       : 0000000000000000391db4d3d8941fe4
+    Parent ID      : 391db4d3d8941fe4
+    Trace ID       : 0000000000000000391db4d3d8941fe4
+    Parent ID      : 192562b30f8feeba
+    Trace ID       : 0000000000000000391db4d3d8941fe4
+    Parent ID      : 77c87b1c65e0a08a
+    Trace ID       : 0000000000000000391db4d3d8941fe4
+    Parent ID      : 619291928d31da64
+    Trace ID       : 0000000000000000391db4d3d8941fe4
+    Parent ID      : 5a5e1c38eb588707
+    Trace ID       : 0000000000000000391db4d3d8941fe4
+    Parent ID      : 0fbcb12346f9bbc5
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:37.789Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 10}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000001d4fe098cb306a77
+    Parent ID      : 
+    Trace ID       : 00000000000000001d4fe098cb306a77
+    Parent ID      : 1d4fe098cb306a77
+    Trace ID       : 00000000000000001d4fe098cb306a77
+    Parent ID      : 1b0b907afcc55bf7
+    Trace ID       : 00000000000000001d4fe098cb306a77
+    Parent ID      : 6178458740cbf400
+    Trace ID       : 00000000000000001d4fe098cb306a77
+    Parent ID      : 7fee3967affef65a
+    Trace ID       : 00000000000000001d4fe098cb306a77
+    Parent ID      : 65b2a15737143d4f
+    Trace ID       : 00000000000000001d4fe098cb306a77
+    Parent ID      : 4c1736ca07fe5456
+    Trace ID       : 00000000000000001d4fe098cb306a77
+    Parent ID      : 2b59c478ba4b3f19
+    Trace ID       : 00000000000000001d4fe098cb306a77
+    Parent ID      : 05261f09a5c1f04a
+    Trace ID       : 00000000000000001d4fe098cb306a77
+    Parent ID      : 3e7cf1bbdd6f213b
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:38.792Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 2, "spans": 24}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000003482426fc214de4f
+    Parent ID      : 3482426fc214de4f
+    Trace ID       : 00000000000000003482426fc214de4f
+    Parent ID      : 698a16705419624a
+    Trace ID       : 00000000000000002a04e7ca88200f21
+    Parent ID      : 
+    Trace ID       : 00000000000000003482426fc214de4f
+    Parent ID      : 1f242ded0874fdd6
+    Trace ID       : 00000000000000002a04e7ca88200f21
+    Parent ID      : 2a04e7ca88200f21
+    Trace ID       : 00000000000000002a04e7ca88200f21
+    Parent ID      : 714c9c79dafa78e5
+    Trace ID       : 00000000000000002a04e7ca88200f21
+    Parent ID      : 670094a0a0993c15
+    Trace ID       : 000000000000000066ec445606352fb2
+    Parent ID      : 66ec445606352fb2
+    Trace ID       : 000000000000000066ec445606352fb2
+    Parent ID      : 33ef10e09a362d5a
+    Trace ID       : 000000000000000066ec445606352fb2
+    Parent ID      : 09deba37b518b276
+    Trace ID       : 000000000000000066ec445606352fb2
+    Parent ID      : 3c5a9a54127368fc
+    Trace ID       : 00000000000000003482426fc214de4f
+    Parent ID      : 
+    Trace ID       : 00000000000000002a04e7ca88200f21
+    Parent ID      : 6b495a68a2d8f548
+    Trace ID       : 000000000000000066ec445606352fb2
+    Parent ID      : 
+    Trace ID       : 000000000000000066ec445606352fb2
+    Parent ID      : 77659f7015e32801
+    Trace ID       : 00000000000000003482426fc214de4f
+    Parent ID      : 0a44ad141f39278e
+    Trace ID       : 00000000000000003482426fc214de4f
+    Parent ID      : 26b6e91175a7c796
+    Trace ID       : 00000000000000003482426fc214de4f
+    Parent ID      : 4b90f897c8f42616
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 0000000000000000287afba6b6ecef01
+    Parent ID      : 
+    Trace ID       : 0000000000000000287afba6b6ecef01
+    Parent ID      : 287afba6b6ecef01
+    Trace ID       : 0000000000000000287afba6b6ecef01
+    Parent ID      : 21fb70eefb48cff3
+    Trace ID       : 0000000000000000287afba6b6ecef01
+    Parent ID      : 49b32cbfb1dfc1ac
+    Trace ID       : 0000000000000000287afba6b6ecef01
+    Parent ID      : 26a18bbafea9ef24
+    Trace ID       : 0000000000000000287afba6b6ecef01
+    Parent ID      : 14a2818ddd9215a8
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:39.794Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 2, "spans": 21}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000006be95f3bb897af9a
+    Parent ID      : 79c72625debd1520
+    Trace ID       : 00000000000000006be95f3bb897af9a
+    Parent ID      : 2312989e18bb1204
+    Trace ID       : 000000000000000079f7feed82e5d8de
+    Parent ID      : 
+    Trace ID       : 000000000000000079f7feed82e5d8de
+    Parent ID      : 4902ba83795b083f
+    Trace ID       : 000000000000000079f7feed82e5d8de
+    Parent ID      : 27a8d5320e8138f3
+    Trace ID       : 00000000000000006be95f3bb897af9a
+    Parent ID      : 30f93a53b9115456
+    Trace ID       : 00000000000000006be95f3bb897af9a
+    Parent ID      : 
+    Trace ID       : 000000000000000031e51dbf00deb48b
+    Parent ID      : 
+    Trace ID       : 000000000000000031e51dbf00deb48b
+    Parent ID      : 31e51dbf00deb48b
+    Trace ID       : 000000000000000031e51dbf00deb48b
+    Parent ID      : 71e6ae08357aca02
+    Trace ID       : 000000000000000031e51dbf00deb48b
+    Parent ID      : 2052ff85650710cf
+    Trace ID       : 00000000000000006be95f3bb897af9a
+    Parent ID      : 5d057056d77fcd04
+    Trace ID       : 00000000000000006be95f3bb897af9a
+    Parent ID      : 6be95f3bb897af9a
+    Trace ID       : 000000000000000079f7feed82e5d8de
+    Parent ID      : 1b864cfd5ff5681d
+    Trace ID       : 000000000000000031e51dbf00deb48b
+    Parent ID      : 6ce0184ea1f55e40
+    Trace ID       : 000000000000000079f7feed82e5d8de
+    Parent ID      : 79f7feed82e5d8de
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000004c6cc2c2123e2199
+    Parent ID      : 
+    Trace ID       : 00000000000000004c6cc2c2123e2199
+    Parent ID      : 4c6cc2c2123e2199
+    Trace ID       : 00000000000000004c6cc2c2123e2199
+    Parent ID      : 6a56c4953623b694
+    Trace ID       : 00000000000000004c6cc2c2123e2199
+    Parent ID      : 17e48d7c3222fb99
+    Trace ID       : 00000000000000004c6cc2c2123e2199
+    Parent ID      : 2ef5abc1a5392077
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:40.996Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 2, "spans": 36}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000005a9575a513f0885d
+    Parent ID      : 486615a259ce6d8b
+    Trace ID       : 00000000000000005a9575a513f0885d
+    Parent ID      : 597bf25839126474
+    Trace ID       : 00000000000000001ae02457bc1d9371
+    Parent ID      : 
+    Trace ID       : 00000000000000001ae02457bc1d9371
+    Parent ID      : 35ee38ae72959be5
+    Trace ID       : 00000000000000001ae02457bc1d9371
+    Parent ID      : 68650b3f4ecaf4b5
+    Trace ID       : 00000000000000005a9575a513f0885d
+    Parent ID      : 143d00c62c3f507b
+    Trace ID       : 00000000000000005a9575a513f0885d
+    Parent ID      : 
+    Trace ID       : 000000000000000076b3788a7cc8fb0d
+    Parent ID      : 
+    Trace ID       : 000000000000000076b3788a7cc8fb0d
+    Parent ID      : 76b3788a7cc8fb0d
+    Trace ID       : 000000000000000076b3788a7cc8fb0d
+    Parent ID      : 36e6e5667e41c897
+    Trace ID       : 000000000000000076b3788a7cc8fb0d
+    Parent ID      : 2d261809e42bbdee
+    Trace ID       : 00000000000000005a9575a513f0885d
+    Parent ID      : 74e4cdaef24a3535
+    Trace ID       : 00000000000000005a9575a513f0885d
+    Parent ID      : 5a9575a513f0885d
+    Trace ID       : 00000000000000001ae02457bc1d9371
+    Parent ID      : 37c6cd15233754dd
+    Trace ID       : 000000000000000076b3788a7cc8fb0d
+    Parent ID      : 5ccc1c153c8fcf68
+    Trace ID       : 00000000000000001ae02457bc1d9371
+    Parent ID      : 1ae02457bc1d9371
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000004e01bca81a6501c3
+    Parent ID      : 5f457d2b02d60ca4
+    Trace ID       : 000000000000000054c0aa03f33751a6
+    Parent ID      : 1f667ef99ff6b5da
+    Trace ID       : 000000000000000054c0aa03f33751a6
+    Parent ID      : 54c0aa03f33751a6
+    Trace ID       : 0000000000000000204787891f710525
+    Parent ID      : 0a7505a380a37569
+    Trace ID       : 00000000000000004e01bca81a6501c3
+    Parent ID      : 
+    Trace ID       : 000000000000000054c0aa03f33751a6
+    Parent ID      : 190c37362aaa79c4
+    Trace ID       : 0000000000000000204787891f710525
+    Parent ID      : 4c1b067edac9d840
+    Trace ID       : 000000000000000054c0aa03f33751a6
+    Parent ID      : 18473c94b7df6349
+    Trace ID       : 00000000000000004e01bca81a6501c3
+    Parent ID      : 29ea12f6d306ddd9
+    Trace ID       : 0000000000000000204787891f710525
+    Parent ID      : 26e651ae9dd62e7e
+    Trace ID       : 0000000000000000204787891f710525
+    Parent ID      : 7243b3b51724f4d5
+    Trace ID       : 00000000000000004e01bca81a6501c3
+    Parent ID      : 5bdda0f1ef23b465
+    Trace ID       : 000000000000000054c0aa03f33751a6
+    Parent ID      : 
+    Trace ID       : 0000000000000000204787891f710525
+    Parent ID      : 1d73c6342d90e5d2
+    Trace ID       : 00000000000000004e01bca81a6501c3
+    Parent ID      : 73e2ec65f24b1701
+    Trace ID       : 0000000000000000204787891f710525
+    Parent ID      : 204787891f710525
+    Trace ID       : 000000000000000054c0aa03f33751a6
+    Parent ID      : 242bb7584743dc22
+    Trace ID       : 00000000000000004e01bca81a6501c3
+    Parent ID      : 4e01bca81a6501c3
+    Trace ID       : 0000000000000000204787891f710525
+    Parent ID      : 
+    Trace ID       : 00000000000000004e01bca81a6501c3
+    Parent ID      : 296c9dd0fbfbe508
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:41.998Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 2, "spans": 27}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000007f1edf5a2b1dcf69
+    Parent ID      : 
+    Trace ID       : 00000000000000007f1edf5a2b1dcf69
+    Parent ID      : 7f1edf5a2b1dcf69
+    Trace ID       : 00000000000000007f1edf5a2b1dcf69
+    Parent ID      : 31321c2cd28e405c
+    Trace ID       : 00000000000000007f1edf5a2b1dcf69
+    Parent ID      : 5d592536b84983a1
+    Trace ID       : 00000000000000007f1edf5a2b1dcf69
+    Parent ID      : 347339c3a9d81b23
+    Trace ID       : 00000000000000007f1edf5a2b1dcf69
+    Parent ID      : 323b3b31b9b2406f
+    Trace ID       : 00000000000000007293b4fea3ec97cc
+    Parent ID      : 
+    Trace ID       : 00000000000000007293b4fea3ec97cc
+    Parent ID      : 7293b4fea3ec97cc
+    Trace ID       : 00000000000000007293b4fea3ec97cc
+    Parent ID      : 1d9996455e7edee8
+    Trace ID       : 00000000000000007293b4fea3ec97cc
+    Parent ID      : 4f2e3ae1521666d2
+    Trace ID       : 00000000000000007293b4fea3ec97cc
+    Parent ID      : 66aa44126eff05b9
+    Trace ID       : 00000000000000007293b4fea3ec97cc
+    Parent ID      : 0a4a274fd77bb3fe
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 000000000000000038eccb6033a9a00b
+    Parent ID      : 1f7d9c1cdbf3700c
+    Trace ID       : 000000000000000038eccb6033a9a00b
+    Parent ID      : 6acb914f524b6ae8
+    Trace ID       : 00000000000000002dd121143dd97383
+    Parent ID      : 
+    Trace ID       : 00000000000000002dd121143dd97383
+    Parent ID      : 2dd121143dd97383
+    Trace ID       : 00000000000000002dd121143dd97383
+    Parent ID      : 2d4e33689e037c1b
+    Trace ID       : 000000000000000038eccb6033a9a00b
+    Parent ID      : 38eccb6033a9a00b
+    Trace ID       : 00000000000000002dd121143dd97383
+    Parent ID      : 46ddf3d743cee174
+    Trace ID       : 00000000000000000265fc0a1d7d6c6c
+    Parent ID      : 
+    Trace ID       : 00000000000000000265fc0a1d7d6c6c
+    Parent ID      : 0265fc0a1d7d6c6c
+    Trace ID       : 00000000000000000265fc0a1d7d6c6c
+    Parent ID      : 18eb93090d71f02a
+    Trace ID       : 00000000000000000265fc0a1d7d6c6c
+    Parent ID      : 2bf1c84dab980d74
+    Trace ID       : 000000000000000038eccb6033a9a00b
+    Parent ID      : 0398abfba0c5094a
+    Trace ID       : 000000000000000038eccb6033a9a00b
+    Parent ID      : 
+    Trace ID       : 00000000000000000265fc0a1d7d6c6c
+    Parent ID      : 7dbd1d10dc2ce000
+    Trace ID       : 00000000000000002dd121143dd97383
+    Parent ID      : 0f3777fc6193b627
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:43.000Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 2, "spans": 23}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 000000000000000062255ffa5815976b
+    Parent ID      : 
+    Trace ID       : 000000000000000062255ffa5815976b
+    Parent ID      : 62255ffa5815976b
+    Trace ID       : 000000000000000062255ffa5815976b
+    Parent ID      : 00d80d454818198d
+    Trace ID       : 000000000000000062255ffa5815976b
+    Parent ID      : 505df58674d8b4b7
+    Trace ID       : 000000000000000062255ffa5815976b
+    Parent ID      : 567461277f1c4e1d
+    Trace ID       : 000000000000000062255ffa5815976b
+    Parent ID      : 1453e299050bade7
+    Trace ID       : 000000000000000031711887e802f4eb
+    Parent ID      : 
+    Trace ID       : 000000000000000031711887e802f4eb
+    Parent ID      : 31711887e802f4eb
+    Trace ID       : 000000000000000031711887e802f4eb
+    Parent ID      : 0569296c5d908f7c
+    Trace ID       : 000000000000000031711887e802f4eb
+    Parent ID      : 5e9d8c61c51219fe
+    Trace ID       : 000000000000000031711887e802f4eb
+    Parent ID      : 481a9c0aad28a08d
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 0000000000000000632a6d7d0f942967
+    Parent ID      : 
+    Trace ID       : 0000000000000000632a6d7d0f942967
+    Parent ID      : 632a6d7d0f942967
+    Trace ID       : 0000000000000000632a6d7d0f942967
+    Parent ID      : 23a078f6bd7ad8f5
+    Trace ID       : 0000000000000000632a6d7d0f942967
+    Parent ID      : 711f96f0dd8b2de6
+    Trace ID       : 0000000000000000632a6d7d0f942967
+    Parent ID      : 15676d962a84a3b2
+    Trace ID       : 00000000000000005d57bac3994b9e40
+    Parent ID      : 
+    Trace ID       : 00000000000000005d57bac3994b9e40
+    Parent ID      : 5d57bac3994b9e40
+    Trace ID       : 00000000000000005d57bac3994b9e40
+    Parent ID      : 4b7ed90aaa9b9849
+    Trace ID       : 00000000000000005d57bac3994b9e40
+    Parent ID      : 0a56fdd31a5f7e0d
+    Trace ID       : 00000000000000005d57bac3994b9e40
+    Parent ID      : 74d2c020697cda79
+    Trace ID       : 00000000000000005d57bac3994b9e40
+    Parent ID      : 1da4bfac5e150b0c
+    Trace ID       : 00000000000000005d57bac3994b9e40
+    Parent ID      : 3170100c8a8d84b2
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:44.003Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 11}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000000cd8f60c9ea911f4
+    Parent ID      : 
+    Trace ID       : 00000000000000000cd8f60c9ea911f4
+    Parent ID      : 0cd8f60c9ea911f4
+    Trace ID       : 00000000000000000cd8f60c9ea911f4
+    Parent ID      : 188c9ff009c5d309
+    Trace ID       : 00000000000000000cd8f60c9ea911f4
+    Parent ID      : 7a261a03059d9fe5
+    Trace ID       : 00000000000000000cd8f60c9ea911f4
+    Parent ID      : 634aabe187fc1fba
+    Trace ID       : 00000000000000000cd8f60c9ea911f4
+    Parent ID      : 75111184d7908b90
+    Trace ID       : 00000000000000000a27bdb715e90bec
+    Parent ID      : 
+    Trace ID       : 00000000000000000a27bdb715e90bec
+    Parent ID      : 0a27bdb715e90bec
+    Trace ID       : 00000000000000000a27bdb715e90bec
+    Parent ID      : 186ae0e32643889c
+    Trace ID       : 00000000000000000a27bdb715e90bec
+    Parent ID      : 045601eda2b147c5
+    Trace ID       : 00000000000000000a27bdb715e90bec
+    Parent ID      : 18d72d11d15779b8
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:44.203Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 10}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 0000000000000000795b7578f495b2be
+    Parent ID      : 
+    Trace ID       : 0000000000000000795b7578f495b2be
+    Parent ID      : 795b7578f495b2be
+    Trace ID       : 0000000000000000795b7578f495b2be
+    Parent ID      : 2f959a11e768146a
+    Trace ID       : 0000000000000000795b7578f495b2be
+    Parent ID      : 54802b9d81f649b6
+    Trace ID       : 0000000000000000795b7578f495b2be
+    Parent ID      : 74240462a7477535
+    Trace ID       : 0000000000000000712ce65e75dc18ed
+    Parent ID      : 
+    Trace ID       : 0000000000000000712ce65e75dc18ed
+    Parent ID      : 712ce65e75dc18ed
+    Trace ID       : 0000000000000000712ce65e75dc18ed
+    Parent ID      : 040648c23e2b042d
+    Trace ID       : 0000000000000000712ce65e75dc18ed
+    Parent ID      : 66df826c13469e04
+    Trace ID       : 0000000000000000712ce65e75dc18ed
+    Parent ID      : 0a41346e0edfdbf7
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:45.004Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 6}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000003796bd3153c98514
+    Parent ID      : 
+    Trace ID       : 00000000000000003796bd3153c98514
+    Parent ID      : 3796bd3153c98514
+    Trace ID       : 00000000000000003796bd3153c98514
+    Parent ID      : 4826362adb856a3a
+    Trace ID       : 00000000000000003796bd3153c98514
+    Parent ID      : 4e4947c704478af6
+    Trace ID       : 00000000000000003796bd3153c98514
+    Parent ID      : 3c8b7b2718f83b65
+    Trace ID       : 00000000000000003796bd3153c98514
+    Parent ID      : 47eb7ee4dba44013
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:45.205Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 5}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 0000000000000000789ea5640ff0ccdc
+    Parent ID      : 
+    Trace ID       : 0000000000000000789ea5640ff0ccdc
+    Parent ID      : 789ea5640ff0ccdc
+    Trace ID       : 0000000000000000789ea5640ff0ccdc
+    Parent ID      : 1473b92c74843f74
+    Trace ID       : 0000000000000000789ea5640ff0ccdc
+    Parent ID      : 3c609f7c6cd0d464
+    Trace ID       : 0000000000000000789ea5640ff0ccdc
+    Parent ID      : 31d982803209e5a4
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:46.007Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 5}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000001be73a3f49e245da
+    Parent ID      : 
+    Trace ID       : 00000000000000001be73a3f49e245da
+    Parent ID      : 1be73a3f49e245da
+    Trace ID       : 00000000000000001be73a3f49e245da
+    Parent ID      : 42be1b23d1c06cb6
+    Trace ID       : 00000000000000001be73a3f49e245da
+    Parent ID      : 3117156c1efae60c
+    Trace ID       : 00000000000000001be73a3f49e245da
+    Parent ID      : 752b7d2fa5433e2d
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:46.408Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 10}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000002314c49b1ac8a193
+    Parent ID      : 
+    Trace ID       : 00000000000000002314c49b1ac8a193
+    Parent ID      : 2314c49b1ac8a193
+    Trace ID       : 00000000000000002314c49b1ac8a193
+    Parent ID      : 52136e0d98bfb69c
+    Trace ID       : 00000000000000002314c49b1ac8a193
+    Parent ID      : 5c20fa9a78c5012c
+    Trace ID       : 00000000000000002314c49b1ac8a193
+    Parent ID      : 3e7c116888629167
+    Trace ID       : 0000000000000000046f15d8e86b87fd
+    Parent ID      : 
+    Trace ID       : 0000000000000000046f15d8e86b87fd
+    Parent ID      : 046f15d8e86b87fd
+    Trace ID       : 0000000000000000046f15d8e86b87fd
+    Parent ID      : 6e6c21636bc2845c
+    Trace ID       : 0000000000000000046f15d8e86b87fd
+    Parent ID      : 6656e3e3617a4a5a
+    Trace ID       : 0000000000000000046f15d8e86b87fd
+    Parent ID      : 706994af2091d6d7
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:47.210Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 10}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 000000000000000056bee1c377b41068
+    Parent ID      : 
+    Trace ID       : 000000000000000056bee1c377b41068
+    Parent ID      : 56bee1c377b41068
+    Trace ID       : 000000000000000056bee1c377b41068
+    Parent ID      : 4a877f70cbaa6764
+    Trace ID       : 000000000000000056bee1c377b41068
+    Parent ID      : 795018950ef1a973
+    Trace ID       : 000000000000000056bee1c377b41068
+    Parent ID      : 27106035828a2e73
+    Trace ID       : 00000000000000006a59f7005f09142e
+    Parent ID      : 
+    Trace ID       : 00000000000000006a59f7005f09142e
+    Parent ID      : 6a59f7005f09142e
+    Trace ID       : 00000000000000006a59f7005f09142e
+    Parent ID      : 02c5d4c88712e43c
+    Trace ID       : 00000000000000006a59f7005f09142e
+    Parent ID      : 38ea85d6d1904f12
+    Trace ID       : 00000000000000006a59f7005f09142e
+    Parent ID      : 1e7f399ecbcf2d88
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:57.026Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 6}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000005f97abd75370dae3
+    Parent ID      : 
+    Trace ID       : 00000000000000005f97abd75370dae3
+    Parent ID      : 5f97abd75370dae3
+    Trace ID       : 00000000000000005f97abd75370dae3
+    Parent ID      : 5a129690ade58050
+    Trace ID       : 00000000000000005f97abd75370dae3
+    Parent ID      : 46e4f0f95c442850
+    Trace ID       : 00000000000000005f97abd75370dae3
+    Parent ID      : 54fb0512c2f83bc9
+    Trace ID       : 00000000000000005f97abd75370dae3
+    Parent ID      : 512dc4fb2264a053
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:57.828Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 12}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 000000000000000022a8f9e18d712dab
+    Parent ID      : 
+    Trace ID       : 000000000000000022a8f9e18d712dab
+    Parent ID      : 22a8f9e18d712dab
+    Trace ID       : 000000000000000022a8f9e18d712dab
+    Parent ID      : 503c67c216456f4b
+    Trace ID       : 000000000000000022a8f9e18d712dab
+    Parent ID      : 0191f6beb2889c5e
+    Trace ID       : 000000000000000022a8f9e18d712dab
+    Parent ID      : 2d471ad384e633cc
+    Trace ID       : 000000000000000022a8f9e18d712dab
+    Parent ID      : 15c5188e72052ec9
+    Trace ID       : 000000000000000022a8f9e18d712dab
+    Parent ID      : 376a6ec2759346c7
+    Trace ID       : 000000000000000056c19d29bcf84c93
+    Parent ID      : 
+    Trace ID       : 000000000000000056c19d29bcf84c93
+    Parent ID      : 56c19d29bcf84c93
+    Trace ID       : 000000000000000056c19d29bcf84c93
+    Parent ID      : 6fd879ca4a9e2070
+    Trace ID       : 000000000000000056c19d29bcf84c93
+    Parent ID      : 7e4895db299b3554
+    Trace ID       : 000000000000000056c19d29bcf84c93
+    Parent ID      : 10023fdb7f68209b
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:57:58.029Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 6}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000004c0b7fb5c3fbbfb3
+    Parent ID      : 
+    Trace ID       : 00000000000000004c0b7fb5c3fbbfb3
+    Parent ID      : 4c0b7fb5c3fbbfb3
+    Trace ID       : 00000000000000004c0b7fb5c3fbbfb3
+    Parent ID      : 6327ce451488e089
+    Trace ID       : 00000000000000004c0b7fb5c3fbbfb3
+    Parent ID      : 094b280aa2ce5fb9
+    Trace ID       : 00000000000000004c0b7fb5c3fbbfb3
+    Parent ID      : 70a6ddda265890d0
+    Trace ID       : 00000000000000004c0b7fb5c3fbbfb3
+    Parent ID      : 5e9c9c258e740748
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:58:06.443Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 6}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 000000000000000014a2e034e2f0598e
+    Parent ID      : 
+    Trace ID       : 000000000000000014a2e034e2f0598e
+    Parent ID      : 14a2e034e2f0598e
+    Trace ID       : 000000000000000014a2e034e2f0598e
+    Parent ID      : 1da28195a6af07b9
+    Trace ID       : 000000000000000014a2e034e2f0598e
+    Parent ID      : 5291d81cd12ab87b
+    Trace ID       : 000000000000000014a2e034e2f0598e
+    Parent ID      : 274359ee9a113ff2
+    Trace ID       : 000000000000000014a2e034e2f0598e
+    Parent ID      : 369b8fadfaf5c195
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:58:07.645Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 6}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 0000000000000000743c39f257392bbd
+    Parent ID      : 
+    Trace ID       : 0000000000000000743c39f257392bbd
+    Parent ID      : 743c39f257392bbd
+    Trace ID       : 0000000000000000743c39f257392bbd
+    Parent ID      : 7a9956bf02fe1049
+    Trace ID       : 0000000000000000743c39f257392bbd
+    Parent ID      : 7066a5ab3f148724
+    Trace ID       : 0000000000000000743c39f257392bbd
+    Parent ID      : 41443cb076d5d5e9
+    Trace ID       : 0000000000000000743c39f257392bbd
+    Parent ID      : 5ac490283d01b876
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:58:12.053Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 6}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000001e90816bce9114af
+    Parent ID      : 
+    Trace ID       : 00000000000000001e90816bce9114af
+    Parent ID      : 1e90816bce9114af
+    Trace ID       : 00000000000000001e90816bce9114af
+    Parent ID      : 3e6245080e762c3d
+    Trace ID       : 00000000000000001e90816bce9114af
+    Parent ID      : 05cadc11adfd3842
+    Trace ID       : 00000000000000001e90816bce9114af
+    Parent ID      : 5616d6fca0b4391e
+    Trace ID       : 00000000000000001e90816bce9114af
+    Parent ID      : 42530b1ae9dd869d
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:58:13.055Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 2, "spans": 10}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000000eb6383502cca975
+    Parent ID      : 
+    Trace ID       : 00000000000000000eb6383502cca975
+    Parent ID      : 0eb6383502cca975
+    Trace ID       : 00000000000000000eb6383502cca975
+    Parent ID      : 11fbe4f9ccc04459
+    Trace ID       : 00000000000000000eb6383502cca975
+    Parent ID      : 7b8ed337bae893a8
+    Trace ID       : 00000000000000000eb6383502cca975
+    Parent ID      : 5f33feb7ba47c711
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 000000000000000046a46344cf479971
+    Parent ID      : 
+    Trace ID       : 000000000000000046a46344cf479971
+    Parent ID      : 46a46344cf479971
+    Trace ID       : 000000000000000046a46344cf479971
+    Parent ID      : 6dfec0aa35018d2c
+    Trace ID       : 000000000000000046a46344cf479971
+    Parent ID      : 528ed3f0fbb37892
+    Trace ID       : 000000000000000046a46344cf479971
+    Parent ID      : 10fef07f0851b929
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:58:23.673Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 2, "spans": 13}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 0000000000000000418d0594eea3d930
+    Parent ID      : 
+    Trace ID       : 0000000000000000418d0594eea3d930
+    Parent ID      : 418d0594eea3d930
+    Trace ID       : 0000000000000000418d0594eea3d930
+    Parent ID      : 07447d0fac1cb8f9
+    Trace ID       : 0000000000000000418d0594eea3d930
+    Parent ID      : 7a8f352c13314577
+    Trace ID       : 0000000000000000418d0594eea3d930
+    Parent ID      : 586041a5838fada3
+    Trace ID       : 0000000000000000418d0594eea3d930
+    Parent ID      : 5cde6e210bde8c64
+    Trace ID       : 0000000000000000418d0594eea3d930
+    Parent ID      : 44ce1a92a00dcbb2
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 000000000000000047fbe0e3e2d974f8
+    Parent ID      : 
+    Trace ID       : 000000000000000047fbe0e3e2d974f8
+    Parent ID      : 47fbe0e3e2d974f8
+    Trace ID       : 000000000000000047fbe0e3e2d974f8
+    Parent ID      : 4a0a7d073f444da4
+    Trace ID       : 000000000000000047fbe0e3e2d974f8
+    Parent ID      : 64bdefc05ca8c12f
+    Trace ID       : 000000000000000047fbe0e3e2d974f8
+    Parent ID      : 5941188da20a39be
+    Trace ID       : 000000000000000047fbe0e3e2d974f8
+    Parent ID      : 3eac2b493d389e99
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:58:25.877Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 7}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 0000000000000000729c7ee2adbd852a
+    Parent ID      : 
+    Trace ID       : 0000000000000000729c7ee2adbd852a
+    Parent ID      : 729c7ee2adbd852a
+    Trace ID       : 0000000000000000729c7ee2adbd852a
+    Parent ID      : 41c03f245f9e2dd3
+    Trace ID       : 0000000000000000729c7ee2adbd852a
+    Parent ID      : 70f5013442244b5f
+    Trace ID       : 0000000000000000729c7ee2adbd852a
+    Parent ID      : 60a8dfe45b6c2086
+    Trace ID       : 0000000000000000729c7ee2adbd852a
+    Parent ID      : 53ff7fd00a69aba5
+    Trace ID       : 0000000000000000729c7ee2adbd852a
+    Parent ID      : 27861c1b2591d754
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:58:29.083Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 7}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 000000000000000002aee372c92259d5
+    Parent ID      : 
+     -> coredns.io/name: Str(www.microsoft.com.svc.cluster.local.)
+    Trace ID       : 000000000000000002aee372c92259d5
+    Parent ID      : 02aee372c92259d5
+    Trace ID       : 000000000000000002aee372c92259d5
+    Parent ID      : 4b1b4e4111f2e640
+    Trace ID       : 000000000000000002aee372c92259d5
+    Parent ID      : 7ea360d6fb181491
+    Trace ID       : 000000000000000002aee372c92259d5
+    Parent ID      : 68eaea544f1e71de
+    Trace ID       : 000000000000000002aee372c92259d5
+    Parent ID      : 09d02ce4bb618d0b
+    Trace ID       : 000000000000000002aee372c92259d5
+    Parent ID      : 57f10ff2c123def1
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:58:30.086Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 7}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000003f5dd264151d0f1f
+    Parent ID      : 
+     -> coredns.io/name: Str(www.microsoft.com.trace-lab.svc.cluster.local.)
+    Trace ID       : 00000000000000003f5dd264151d0f1f
+    Parent ID      : 3f5dd264151d0f1f
+    Trace ID       : 00000000000000003f5dd264151d0f1f
+    Parent ID      : 6a90c504252b7d14
+    Trace ID       : 00000000000000003f5dd264151d0f1f
+    Parent ID      : 4be1457be8473ffc
+    Trace ID       : 00000000000000003f5dd264151d0f1f
+    Parent ID      : 6608954050ccfe8a
+    Trace ID       : 00000000000000003f5dd264151d0f1f
+    Parent ID      : 4fe50a6510c38f7f
+    Trace ID       : 00000000000000003f5dd264151d0f1f
+    Parent ID      : 3aae6c333c6da136
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:58:32.289Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 3, "spans": 17}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000004f2b53cfb6a2e634
+    Parent ID      : 
+    Trace ID       : 00000000000000004f2b53cfb6a2e634
+    Parent ID      : 4f2b53cfb6a2e634
+    Trace ID       : 00000000000000004f2b53cfb6a2e634
+    Parent ID      : 1e3c169580b04196
+    Trace ID       : 00000000000000004f2b53cfb6a2e634
+    Parent ID      : 18aedb5b363c560f
+    Trace ID       : 00000000000000004f2b53cfb6a2e634
+    Parent ID      : 10716d95cd8c0cf7
+    Trace ID       : 00000000000000004f2b53cfb6a2e634
+    Parent ID      : 4930c6ba11c56d07
+     -> service.name: Str(otel-dns-client)
+    Trace ID       : 5f5bf280cad577cf47b7db599f46fc33
+    Parent ID      : 7025309f0283360f
+     -> http.url: Str(https://www.microsoft.com/)
+    Trace ID       : 5f5bf280cad577cf47b7db599f46fc33
+    Parent ID      : 7025309f0283360f
+    Trace ID       : 5f5bf280cad577cf47b7db599f46fc33
+    Parent ID      : 7025309f0283360f
+    Trace ID       : 5f5bf280cad577cf47b7db599f46fc33
+    Parent ID      : 
+     -> http.url: Str(http://127.0.0.1:18080/resolve-and-call?host=www.microsoft.com)
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000001df6a41e3f793aeb
+    Parent ID      : 
+    Trace ID       : 00000000000000001df6a41e3f793aeb
+    Parent ID      : 1df6a41e3f793aeb
+    Trace ID       : 00000000000000001df6a41e3f793aeb
+    Parent ID      : 57a96e9302d7c708
+    Trace ID       : 00000000000000001df6a41e3f793aeb
+    Parent ID      : 226bc96c36a77c14
+    Trace ID       : 00000000000000001df6a41e3f793aeb
+    Parent ID      : 39cf96d61a310e09
+    Trace ID       : 00000000000000001df6a41e3f793aeb
+    Parent ID      : 766f2b4e65c64f96
+    Trace ID       : 00000000000000001df6a41e3f793aeb
+    Parent ID      : 5358bd8757271e7d
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:58:33.292Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 7}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 000000000000000071453d09e67f1d8d
+    Parent ID      : 
+    Trace ID       : 000000000000000071453d09e67f1d8d
+    Parent ID      : 71453d09e67f1d8d
+    Trace ID       : 000000000000000071453d09e67f1d8d
+    Parent ID      : 08ecee706bd40038
+    Trace ID       : 000000000000000071453d09e67f1d8d
+    Parent ID      : 366a0f752aacd371
+    Trace ID       : 000000000000000071453d09e67f1d8d
+    Parent ID      : 27fe17b3d243d3fb
+    Trace ID       : 000000000000000071453d09e67f1d8d
+    Parent ID      : 6a4103c32a7131ec
+    Trace ID       : 000000000000000071453d09e67f1d8d
+    Parent ID      : 1890f483c48c37ed
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:58:37.699Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 5}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000002840ca872bc4b9f6
+    Parent ID      : 
+    Trace ID       : 00000000000000002840ca872bc4b9f6
+    Parent ID      : 2840ca872bc4b9f6
+    Trace ID       : 00000000000000002840ca872bc4b9f6
+    Parent ID      : 0c260721a83feaee
+    Trace ID       : 00000000000000002840ca872bc4b9f6
+    Parent ID      : 5f04aef6df2f063a
+    Trace ID       : 00000000000000002840ca872bc4b9f6
+    Parent ID      : 4c7fc75902fbddbe
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:58:42.910Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 7}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000006a671226fe9b2f72
+    Parent ID      : 
+    Trace ID       : 00000000000000006a671226fe9b2f72
+    Parent ID      : 6a671226fe9b2f72
+    Trace ID       : 00000000000000006a671226fe9b2f72
+    Parent ID      : 3bb27c4cffdbd5d5
+    Trace ID       : 00000000000000006a671226fe9b2f72
+    Parent ID      : 47c678ea42d7358d
+    Trace ID       : 00000000000000006a671226fe9b2f72
+    Parent ID      : 2ccc270b7d88e054
+    Trace ID       : 00000000000000006a671226fe9b2f72
+    Parent ID      : 649adfb986a53757
+    Trace ID       : 00000000000000006a671226fe9b2f72
+    Parent ID      : 34915bfa4e6860ca
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:58:43.912Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 10}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000003229674094e3efeb
+    Parent ID      : 
+    Trace ID       : 00000000000000003229674094e3efeb
+    Parent ID      : 3229674094e3efeb
+    Trace ID       : 00000000000000003229674094e3efeb
+    Parent ID      : 50442f7165abcb36
+    Trace ID       : 00000000000000003229674094e3efeb
+    Parent ID      : 32ef50a46506e790
+    Trace ID       : 00000000000000003229674094e3efeb
+    Parent ID      : 3a30b1b5b326ed8c
+    Trace ID       : 00000000000000003229674094e3efeb
+    Parent ID      : 1b9a81d611e1ed83
+    Trace ID       : 00000000000000003229674094e3efeb
+    Parent ID      : 0819b5f357bb085d
+    Trace ID       : 00000000000000003229674094e3efeb
+    Parent ID      : 5e42fa70c383e659
+    Trace ID       : 00000000000000003229674094e3efeb
+    Parent ID      : 16eaa15ae2fd5f10
+    Trace ID       : 00000000000000003229674094e3efeb
+    Parent ID      : 604c9a9509a8b7a5
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:58:44.113Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 1, "spans": 10}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 000000000000000004285187dc9d7cef
+    Parent ID      : 
+    Trace ID       : 000000000000000004285187dc9d7cef
+    Parent ID      : 04285187dc9d7cef
+    Trace ID       : 000000000000000004285187dc9d7cef
+    Parent ID      : 01b125f93295d02a
+    Trace ID       : 000000000000000004285187dc9d7cef
+    Parent ID      : 44fc967b05200c79
+    Trace ID       : 000000000000000004285187dc9d7cef
+    Parent ID      : 60f512c42f7f39b7
+    Trace ID       : 000000000000000004285187dc9d7cef
+    Parent ID      : 7f0910f83d635e81
+    Trace ID       : 000000000000000004285187dc9d7cef
+    Parent ID      : 74f59f90c0a3fd6d
+    Trace ID       : 000000000000000004285187dc9d7cef
+    Parent ID      : 53c7336dc3e1bba0
+    Trace ID       : 000000000000000004285187dc9d7cef
+    Parent ID      : 60a70eda961f1149
+    Trace ID       : 000000000000000004285187dc9d7cef
+    Parent ID      : 10ccbc574746e078
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}
+2026-06-12T05:58:56.933Z	info	Traces	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces", "resource spans": 2, "spans": 17}
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 00000000000000002b1130998708f589
+    Parent ID      : 
+    Trace ID       : 00000000000000002b1130998708f589
+    Parent ID      : 2b1130998708f589
+    Trace ID       : 00000000000000002b1130998708f589
+    Parent ID      : 64ccb3dfaf967be6
+    Trace ID       : 00000000000000002b1130998708f589
+    Parent ID      : 7ea31d0fa00ad61d
+    Trace ID       : 00000000000000002b1130998708f589
+    Parent ID      : 6b93a36521c2b253
+    Trace ID       : 00000000000000002b1130998708f589
+    Parent ID      : 03ec7b802c9e57a7
+    Trace ID       : 00000000000000002b1130998708f589
+    Parent ID      : 6f8519eb2c90ec31
+     -> service.name: Str(aks-coredns)
+    Trace ID       : 0000000000000000637ef761a6148969
+    Parent ID      : 
+    Trace ID       : 0000000000000000637ef761a6148969
+    Parent ID      : 637ef761a6148969
+    Trace ID       : 0000000000000000637ef761a6148969
+    Parent ID      : 51ea937a25a01dde
+    Trace ID       : 0000000000000000637ef761a6148969
+    Parent ID      : 1230e2dbb6466136
+    Trace ID       : 0000000000000000637ef761a6148969
+    Parent ID      : 744c6ab9e4bd0e01
+    Trace ID       : 0000000000000000637ef761a6148969
+    Parent ID      : 2e8a9b4d3558a0ba
+    Trace ID       : 0000000000000000637ef761a6148969
+    Parent ID      : 0742238d19a2dc44
+    Trace ID       : 0000000000000000637ef761a6148969
+    Parent ID      : 66d219689b2268cb
+    Trace ID       : 0000000000000000637ef761a6148969
+    Parent ID      : 211f32a6862742a0
+    Trace ID       : 0000000000000000637ef761a6148969
+    Parent ID      : 5d3f86b33d2ca828
+	{"resource": {"service.instance.id": "5b3871b7-c7ad-4b0e-89a5-1c5bc163ff06", "service.name": "otelcol-contrib", "service.version": "0.154.0"}, "otelcol.component.id": "debug", "otelcol.component.kind": "exporter", "otelcol.signal": "traces"}

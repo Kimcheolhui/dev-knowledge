@@ -1,0 +1,97 @@
+-> service.name: Str(aks-coredns)
+Trace ID       : 000000000000000002aee372c92259d5
+Parent ID      : 
+Name           : servedns
+Start time     : 2026-06-12 05:58:29.000027 +0000 UTC
+-> coredns.io/name: Str(www.microsoft.com.svc.cluster.local.)
+-> coredns.io/proto: Str(udp)
+-> coredns.io/rcode: Str(NXDOMAIN)
+-> coredns.io/remote: Str(10.244.3.105)
+-> coredns.io/type: Str(A)
+Trace ID       : 000000000000000002aee372c92259d5
+Parent ID      : 02aee372c92259d5
+Name           : prometheus
+Start time     : 2026-06-12 05:58:29.000033 +0000 UTC
+Trace ID       : 000000000000000002aee372c92259d5
+Parent ID      : 4b1b4e4111f2e640
+Name           : errors
+Start time     : 2026-06-12 05:58:29.000045 +0000 UTC
+Trace ID       : 000000000000000002aee372c92259d5
+Parent ID      : 7ea360d6fb181491
+Name           : loadbalance
+Start time     : 2026-06-12 05:58:29.000047 +0000 UTC
+Trace ID       : 000000000000000002aee372c92259d5
+Parent ID      : 68eaea544f1e71de
+Name           : cache
+Start time     : 2026-06-12 05:58:29.00005 +0000 UTC
+Trace ID       : 000000000000000002aee372c92259d5
+Parent ID      : 09d02ce4bb618d0b
+Name           : template
+Start time     : 2026-06-12 05:58:29.000061 +0000 UTC
+Trace ID       : 000000000000000002aee372c92259d5
+Parent ID      : 57f10ff2c123def1
+Name           : kubernetes
+Start time     : 2026-06-12 05:58:29.000066 +0000 UTC
+-> service.name: Str(aks-coredns)
+Trace ID       : 00000000000000003f5dd264151d0f1f
+Parent ID      : 
+Name           : servedns
+Start time     : 2026-06-12 05:58:29.007661 +0000 UTC
+-> coredns.io/remote: Str(10.244.3.105)
+-> coredns.io/type: Str(A)
+-> coredns.io/name: Str(www.microsoft.com.trace-lab.svc.cluster.local.)
+-> coredns.io/proto: Str(udp)
+-> coredns.io/rcode: Str(NXDOMAIN)
+Trace ID       : 00000000000000003f5dd264151d0f1f
+Parent ID      : 3f5dd264151d0f1f
+Name           : prometheus
+Start time     : 2026-06-12 05:58:29.007665 +0000 UTC
+Trace ID       : 00000000000000003f5dd264151d0f1f
+Parent ID      : 6a90c504252b7d14
+Name           : errors
+Start time     : 2026-06-12 05:58:29.007674 +0000 UTC
+Trace ID       : 00000000000000003f5dd264151d0f1f
+Parent ID      : 4be1457be8473ffc
+Name           : loadbalance
+Start time     : 2026-06-12 05:58:29.007675 +0000 UTC
+Trace ID       : 00000000000000003f5dd264151d0f1f
+Parent ID      : 6608954050ccfe8a
+Name           : cache
+Start time     : 2026-06-12 05:58:29.007677 +0000 UTC
+Trace ID       : 00000000000000003f5dd264151d0f1f
+Parent ID      : 4fe50a6510c38f7f
+Name           : template
+Start time     : 2026-06-12 05:58:29.007682 +0000 UTC
+Trace ID       : 00000000000000003f5dd264151d0f1f
+Parent ID      : 3aae6c333c6da136
+Name           : kubernetes
+Start time     : 2026-06-12 05:58:29.007685 +0000 UTC
+-> service.name: Str(otel-dns-client)
+Trace ID       : 5f5bf280cad577cf47b7db599f46fc33
+Parent ID      : 7025309f0283360f
+Name           : GET
+Start time     : 2026-06-12 05:58:29.005550355 +0000 UTC
+-> http.method: Str(GET)
+-> http.url: Str(https://www.microsoft.com/)
+-> http.status_code: Int(200)
+Trace ID       : 5f5bf280cad577cf47b7db599f46fc33
+Parent ID      : 7025309f0283360f
+Name           : GET /resolve-and-call http send
+Start time     : 2026-06-12 05:58:29.379624993 +0000 UTC
+-> http.status_code: Int(200)
+Trace ID       : 5f5bf280cad577cf47b7db599f46fc33
+Parent ID      : 7025309f0283360f
+Name           : GET /resolve-and-call http send
+Start time     : 2026-06-12 05:58:29.380052061 +0000 UTC
+Trace ID       : 5f5bf280cad577cf47b7db599f46fc33
+Parent ID      : 
+Name           : GET /resolve-and-call
+Start time     : 2026-06-12 05:58:28.992308944 +0000 UTC
+-> http.scheme: Str(http)
+-> http.host: Str(127.0.0.1:8080)
+-> http.target: Str(/resolve-and-call)
+-> http.url: Str(http://127.0.0.1:18080/resolve-and-call?host=www.microsoft.com)
+-> http.method: Str(GET)
+-> http.server_name: Str(127.0.0.1:18080)
+-> http.route: Str(/resolve-and-call)
+-> http.status_code: Int(200)

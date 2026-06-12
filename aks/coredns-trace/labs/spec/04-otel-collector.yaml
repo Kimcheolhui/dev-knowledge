@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-config
+  namespace: trace-lab
+  labels:
+    app: otel-collector
+data:
+  config.yaml: |
+    receivers:
+      zipkin:
+        endpoint: 0.0.0.0:9411
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+
+    processors:
+      batch: {}
+
+    exporters:
+      debug:
+        verbosity: detailed
+
+    service:
+      pipelines:
+        traces:
+          receivers: [zipkin, otlp]
+          processors: [batch]
+          exporters: [debug]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel-collector
+  namespace: trace-lab
+  labels:
+    app: otel-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otel-collector
+  template:
+    metadata:
+      labels:
+        app: otel-collector
+    spec:
+      containers:
+        - name: otel-collector
+          image: otel/opentelemetry-collector-contrib:0.154.0
+          args:
+            - --config=/conf/config.yaml
+          ports:
+            - name: zipkin
+              containerPort: 9411
+            - name: otlp-grpc
+              containerPort: 4317
+            - name: otlp-http
+              containerPort: 4318
+          volumeMounts:
+            - name: config
+              mountPath: /conf
+      volumes:
+        - name: config
+          configMap:
+            name: otel-collector-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: otel-collector
+  namespace: trace-lab
+  labels:
+    app: otel-collector
+spec:
+  selector:
+    app: otel-collector
+  ports:
+    - name: zipkin
+      port: 9411
+      targetPort: zipkin
+    - name: otlp-grpc
+      port: 4317
+      targetPort: otlp-grpc
+    - name: otlp-http
+      port: 4318
+      targetPort: otlp-http
