@@ -338,4 +338,4 @@ dns-tools-59488687b5-jd24n   1/1     Running   0          3h28m   10.244.3.121  
 | query name과 application hostname을 연결할 수 있어 보이는가? | 가능하다. 최신 trace에서 `coredns.io/name=api.github.com.`, `coredns.io/name=www.microsoft.com.`, `coredns.io/name=kubernetes.default.svc.cluster.local.`처럼 테스트로 발생시킨 query name이 확인됐다.                                                                              |
 | 부하/노이즈 관점에서 sampling 조정이 필요한가?               | 상황에 따라 필요하다. 반복 query를 발생시키면 `every 10`에서도 테스트 질의를 확인할 수 있었다. 단일 요청 단위의 정확한 correlation을 보려면 짧은 시간 동안 `every 1`로 낮추거나 client IP/query name/time range로 필터링하는 것이 좋다.                                             |
 
-다음 단계: [04-application-trace-correlation.md](04-application-trace-correlation.md)
+다음 단계: [03-generate-query-and-inspect-trace-02.md](03-generate-query-and-inspect-trace-02.md)

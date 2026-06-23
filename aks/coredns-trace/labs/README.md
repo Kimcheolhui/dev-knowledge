@@ -11,6 +11,7 @@
 | 1    | [01-precheck-and-backup.md](01-precheck-and-backup.md)                                 | CoreDNS 현재 상태, `trace` plugin 포함 여부, ConfigMap 백업         |
 | 2    | [02-enable-trace-with-zipkin.md](02-enable-trace-with-zipkin.md)                       | Zipkin 배포, `trace.override` 적용, CoreDNS 재시작                  |
 | 3    | [03-generate-query-and-inspect-trace.md](03-generate-query-and-inspect-trace.md)       | DNS query 발생, Zipkin UI/API에서 span field 확인                   |
+| 3-2  | [03-generate-query-and-inspect-trace-02.md](03-generate-query-and-inspect-trace-02.md) | `debug` plugin을 켠 CoreDNS trace log 확인                          |
 | 4    | [04-application-trace-correlation.md](04-application-trace-correlation.md)             | OpenTelemetry app trace와 CoreDNS trace ID 비교                     |
 | 5    | [05-dns-protocol-trace-context-adoption.md](05-dns-protocol-trace-context-adoption.md) | DNS protocol-level trace context 표준화 시도와 AKS 적용 가능성 정리 |
 | 6    | [06-cleanup-and-result-summary.md](06-cleanup-and-result-summary.md)                   | `trace.override` 제거, lab 리소스 삭제, 결론 정리                   |

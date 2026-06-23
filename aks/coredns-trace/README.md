@@ -50,6 +50,7 @@
 | [labs/01-precheck-and-backup.md](labs/01-precheck-and-backup.md)                                 | 현재 CoreDNS 상태 확인과 백업                         |
 | [labs/02-enable-trace-with-zipkin.md](labs/02-enable-trace-with-zipkin.md)                       | Zipkin 배포와 CoreDNS `trace` 적용                    |
 | [labs/03-generate-query-and-inspect-trace.md](labs/03-generate-query-and-inspect-trace.md)       | DNS query 발생과 CoreDNS trace field 확인             |
+| [labs/03-generate-query-and-inspect-trace-02.md](labs/03-generate-query-and-inspect-trace-02.md) | CoreDNS `debug` plugin을 켠 trace log 확인            |
 | [labs/04-application-trace-correlation.md](labs/04-application-trace-correlation.md)             | 애플리케이션 OpenTelemetry trace와 CoreDNS trace 비교 |
 | [labs/05-dns-protocol-trace-context-adoption.md](labs/05-dns-protocol-trace-context-adoption.md) | DNS protocol-level trace context 표준화 시도 정리     |
 | [labs/06-cleanup-and-result-summary.md](labs/06-cleanup-and-result-summary.md)                   | 정리와 최종 결과 기록                                 |
@@ -225,6 +226,7 @@ Collector/Azure Monitor/Grafana 연계는 <가능/제약 있음/추가 검증 �
 
 - CoreDNS plugin 목록: https://coredns.io/plugins/
 - CoreDNS trace plugin 문서: https://coredns.io/plugins/trace/
+- CoreDNS debug plugin 문서: https://coredns.io/plugins/debug/
 - CoreDNS trace plugin source: https://github.com/coredns/coredns/blob/master/plugin/trace/trace.go
 - CoreDNS trace plugin setup source: https://github.com/coredns/coredns/blob/master/plugin/trace/setup.go
 - CoreDNS `HTTPRequestKey` 문서: https://pkg.go.dev/github.com/coredns/coredns/core/dnsserver#HTTPRequestKey
