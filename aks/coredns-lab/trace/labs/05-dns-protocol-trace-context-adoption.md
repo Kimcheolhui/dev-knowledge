@@ -11,13 +11,13 @@
 
 ## 1. 결론 요약
 
-| 질문                                                            | 판단                                                                                                                                      |
-| --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| DNS에 trace context를 넣을 확장 지점이 있는가?                  | 있다. HTTP header 같은 범용 header는 없지만, Additional section의 EDNS(0) OPT pseudo-RR option을 carrier로 사용할 수 있다.                 |
-| EDNS option에 W3C `traceparent`와 동등한 값을 실을 수 있는가?    | 기술적으로 가능하다. `trace-id`, `parent-id`, `trace-flags`를 option data로 encode하면 된다.                                              |
+| 질문                                                                 | 판단                                                                                                                                      |
+| -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| DNS에 trace context를 넣을 확장 지점이 있는가?                       | 있다. HTTP header 같은 범용 header는 없지만, Additional section의 EDNS(0) OPT pseudo-RR option을 carrier로 사용할 수 있다.                |
+| EDNS option에 W3C `traceparent`와 동등한 값을 실을 수 있는가?        | 기술적으로 가능하다. `trace-id`, `parent-id`, `trace-flags`를 option data로 encode하면 된다.                                              |
 | CoreDNS trace code를 수정하면 그 값을 parent context로 쓸 수 있는가? | 가능하다. CoreDNS는 `dns.Msg`의 EDNS option을 읽을 수 있으므로, trace plugin에서 option을 parse해 span parent 또는 link로 사용할 수 있다. |
-| 현재 AKS/CoreDNS 기본 경로에서 바로 쓸 수 있는가?               | 어렵다. client resolver가 EDNS trace context를 넣지 않고, AKS managed CoreDNS의 trace plugin 코드도 수정할 수 없다.                       |
-| CoreDNS/OpenTelemetry 본류에서 이 방향이 주류로 논의됐는가?     | 아니다. 확인된 논의는 OpenTelemetry plugin 도입, app-side DNS span, eBPF/OBI 기반 DNS/network correlation 쪽에 가깝다.                   |
+| 현재 AKS/CoreDNS 기본 경로에서 바로 쓸 수 있는가?                    | 어렵다. client resolver가 EDNS trace context를 넣지 않고, AKS managed CoreDNS의 trace plugin 코드도 수정할 수 없다.                       |
+| CoreDNS/OpenTelemetry 본류에서 이 방향이 주류로 논의됐는가?          | 아니다. 확인된 논의는 OpenTelemetry plugin 도입, app-side DNS span, eBPF/OBI 기반 DNS/network correlation 쪽에 가깝다.                    |
 
 따라서 현재 PoC의 결론은 다음처럼 정리한다.
 
@@ -86,11 +86,11 @@ Communicating Distributed Trace IDs in EDNS
 
 Version 0 기준 data field는 다음 세 값을 담는다.
 
-| 필드          | 크기     | 의미                                |
-| ------------- | -------- | ----------------------------------- |
-| `trace-id`    | 16 bytes | distributed trace 전체 식별자       |
-| `parent-id`   | 8 bytes  | 직전 span 또는 parent operation ID  |
-| `trace-flags` | 1 byte   | sampled flag 등 trace 처리 flag     |
+| 필드          | 크기     | 의미                               |
+| ------------- | -------- | ---------------------------------- |
+| `trace-id`    | 16 bytes | distributed trace 전체 식별자      |
+| `parent-id`   | 8 bytes  | 직전 span 또는 parent operation ID |
+| `trace-flags` | 1 byte   | sampled flag 등 trace 처리 flag    |
 
 presentation format은 W3C Trace Context의 HTTP header와 유사하다.
 
@@ -100,11 +100,11 @@ TRACEPARENT=[version]-[trace-id]-[parent-id]-[trace-flags]
 
 다만 이 draft는 아직 현재 운영 환경에서 바로 기대할 수 있는 표준 기능으로 보기는 어렵다.
 
-| 항목                  | 현재 판단                                                                                                                           |
+| 항목                  | 현재 판단                                                                                                                            |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | RFC 여부              | 아니다. Internet-Draft 단계다.                                                                                                       |
 | IANA option code 여부 | draft text에서는 option code가 `TBD1`로 남아 있고, IANA EDNS0 Option Codes registry에 `TRACEPARENT` 항목은 확인되지 않는다.          |
-| AKS/CoreDNS 적용성    | 기본 AKS CoreDNS와 일반 Pod resolver 경로에서는 지원된다고 보기 어렵다. client와 DNS server 양쪽 구현이 필요하다.                  |
+| AKS/CoreDNS 적용성    | 기본 AKS CoreDNS와 일반 Pod resolver 경로에서는 지원된다고 보기 어렵다. client와 DNS server 양쪽 구현이 필요하다.                    |
 | 운영 사용 범위        | draft도 upstream/downstream server operator 간 상호 합의 후 사용하는 방향을 전제한다. 무분별한 public DNS 전파 기능으로 보기 어렵다. |
 
 ## 4. CoreDNS code 관점에서 가능한 수정 방향
@@ -144,10 +144,10 @@ span = t.Tracer().StartSpan(defaultTopLevelSpanName, otext.RPCServerOption(spanC
 
 다만 현재 `trace` plugin은 OpenTracing/Zipkin bridge 중심으로 구현되어 있다. EDNS TRACEPARENT draft는 W3C Trace Context 형식이므로, 단순히 HTTP carrier에 `traceparent` 문자열을 넣는 것만으로 기존 Zipkin OpenTracing extractor가 이해한다고 보기는 어렵다. 구현 방향은 둘 중 하나다.
 
-| 방향                                   | 설명                                                                                           |
-| -------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| 기존 trace plugin에 직접 mapping 추가 | EDNS option에서 읽은 W3C trace-id/parent-id를 Zipkin/OpenTracing span context로 직접 변환한다.   |
-| OpenTelemetry 기반 plugin으로 재작성   | CoreDNS tracing을 OpenTelemetry SDK 기반으로 바꾸고 W3C Trace Context propagator를 활용한다.     |
+| 방향                                  | 설명                                                                                           |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| 기존 trace plugin에 직접 mapping 추가 | EDNS option에서 읽은 W3C trace-id/parent-id를 Zipkin/OpenTracing span context로 직접 변환한다. |
+| OpenTelemetry 기반 plugin으로 재작성  | CoreDNS tracing을 OpenTelemetry SDK 기반으로 바꾸고 W3C Trace Context propagator를 활용한다.   |
 
 기술적으로는 가능하지만, 이것은 설정 변경이 아니라 CoreDNS tracing implementation 변경이다.
 
@@ -169,12 +169,12 @@ application active span
 
 가능한 구현 방식은 다음과 같다.
 
-| 방식                                    | 가능성 | 한계                                                                                     |
-| --------------------------------------- | ------ | ---------------------------------------------------------------------------------------- |
-| 앱에서 custom DNS client 사용           | 가능   | 일반 DNS resolution 경로를 우회해야 하며 앱 변경 폭이 크다.                              |
-| 언어 runtime 또는 resolver library 수정 | 가능   | Go/Java/Python/libc/c-ares 등 런타임별 구현이 필요하고 범용 운영 적용이 어렵다.           |
+| 방식                                    | 가능성 | 한계                                                                                              |
+| --------------------------------------- | ------ | ------------------------------------------------------------------------------------------------- |
+| 앱에서 custom DNS client 사용           | 가능   | 일반 DNS resolution 경로를 우회해야 하며 앱 변경 폭이 크다.                                       |
+| 언어 runtime 또는 resolver library 수정 | 가능   | Go/Java/Python/libc/c-ares 등 런타임별 구현이 필요하고 범용 운영 적용이 어렵다.                   |
 | node-local DNS proxy에서 주입           | 제한적 | proxy가 application의 in-process current span context를 알기 어렵다. 정확한 parent 연결이 어렵다. |
-| eBPF 기반 관측/correlation              | 현실적 | protocol propagation은 아니지만, DNS latency/error/query를 trace와 correlation할 수 있다. |
+| eBPF 기반 관측/correlation              | 현실적 | protocol propagation은 아니지만, DNS latency/error/query를 trace와 correlation할 수 있다.         |
 
 따라서 직접 구현 PoC는 가능하지만, 운영 적용은 application/resolver 표준 지원 없이는 제한적이다.
 
@@ -193,13 +193,13 @@ CoreDNS에는 OpenTelemetry plugin을 추가하자는 이슈와 PR이 있었다.
 
 주요 논점은 다음과 같다.
 
-| 논점              | 내용                                                                                 |
-| ----------------- | ------------------------------------------------------------------------------------ |
-| 필요성            | OpenTracing 기반 `trace` plugin을 OpenTelemetry 기반으로 대체하거나 보완한다.         |
-| 장점              | OpenTelemetry Collector/Zipkin 등 더 넓은 backend 연계 가능성을 제공한다.             |
-| 반대/우려         | OpenTelemetry SDK dependency가 CoreDNS에 비해 무겁고, 외부 plugin이 더 적절할 수 있다. |
-| 결과              | PR은 merge되지 않았다. CoreDNS 본류에 별도 `opentelemetry` plugin이 들어가지는 않았다. |
-| EDNS TRACEPARENT와의 관계 | DNS packet의 EDNS option에서 traceparent를 extract하는 논의는 아니다.                 |
+| 논점                      | 내용                                                                                   |
+| ------------------------- | -------------------------------------------------------------------------------------- |
+| 필요성                    | OpenTracing 기반 `trace` plugin을 OpenTelemetry 기반으로 대체하거나 보완한다.          |
+| 장점                      | OpenTelemetry Collector/Zipkin 등 더 넓은 backend 연계 가능성을 제공한다.              |
+| 반대/우려                 | OpenTelemetry SDK dependency가 CoreDNS에 비해 무겁고, 외부 plugin이 더 적절할 수 있다. |
+| 결과                      | PR은 merge되지 않았다. CoreDNS 본류에 별도 `opentelemetry` plugin이 들어가지는 않았다. |
+| EDNS TRACEPARENT와의 관계 | DNS packet의 EDNS option에서 traceparent를 extract하는 논의는 아니다.                  |
 
 즉 CoreDNS 진영에서는 “tracing implementation을 OpenTelemetry로 현대화하자”는 논의는 있었지만, “EDNS option을 trace context carrier로 삼자”는 흐름은 확인되지 않았다.
 
@@ -258,12 +258,12 @@ CoreDNS
 
 그러나 현재 AKS managed CoreDNS 기준으로는 다음 제약이 있다.
 
-| 계층                              | 제약                                                                                              |
-| --------------------------------- | ------------------------------------------------------------------------------------------------- |
-| application/runtime/stub resolver | current OpenTelemetry context를 DNS EDNS option으로 넣지 않는다.                                  |
-| CoreDNS                           | managed CoreDNS의 `trace` plugin 코드를 수정할 수 없고, `coredns-custom`은 Corefile 설정만 바꾼다. |
+| 계층                              | 제약                                                                                                |
+| --------------------------------- | --------------------------------------------------------------------------------------------------- |
+| application/runtime/stub resolver | current OpenTelemetry context를 DNS EDNS option으로 넣지 않는다.                                    |
+| CoreDNS                           | managed CoreDNS의 `trace` plugin 코드를 수정할 수 없고, `coredns-custom`은 Corefile 설정만 바꾼다.  |
 | trace backend                     | 같은 Collector/backend로 모을 수 있어도 trace ID가 다르면 하나의 trace tree로 자동 병합되지 않는다. |
-| 표준화 상태                       | EDNS TRACEPARENT는 아직 널리 배포된 표준 기능이 아니다.                                           |
+| 표준화 상태                       | EDNS TRACEPARENT는 아직 널리 배포된 표준 기능이 아니다.                                             |
 
 따라서 AKS 기본 경로에서 현실적인 접근은 여전히 metadata correlation이다.
 
@@ -291,13 +291,13 @@ Zipkin 또는 OpenTelemetry backend
 
 검증 포인트는 다음과 같다.
 
-| 검증 항목                       | 확인 내용                                                                 |
-| ------------------------------- | ------------------------------------------------------------------------- |
-| EDNS option encode/decode       | client가 넣은 trace-id/parent-id/flags를 CoreDNS에서 정확히 읽는가.        |
-| parent-child 또는 link 생성     | CoreDNS DNS span이 application span의 child 또는 linked span으로 보이는가. |
-| sampling/부하                   | DNS query마다 trace context를 싣는 것이 부하와 데이터량을 과도하게 늘리지 않는가. |
-| cache/forward behavior          | CoreDNS cache hit, upstream forward, NXDOMAIN 등 처리 경로별 span이 안정적인가. |
-| 보안/신뢰 경계                  | 외부에서 임의 trace ID를 주입하는 것을 허용할지, ACL을 둘지 판단한다.      |
+| 검증 항목                   | 확인 내용                                                                         |
+| --------------------------- | --------------------------------------------------------------------------------- |
+| EDNS option encode/decode   | client가 넣은 trace-id/parent-id/flags를 CoreDNS에서 정확히 읽는가.               |
+| parent-child 또는 link 생성 | CoreDNS DNS span이 application span의 child 또는 linked span으로 보이는가.        |
+| sampling/부하               | DNS query마다 trace context를 싣는 것이 부하와 데이터량을 과도하게 늘리지 않는가. |
+| cache/forward behavior      | CoreDNS cache hit, upstream forward, NXDOMAIN 등 처리 경로별 span이 안정적인가.   |
+| 보안/신뢰 경계              | 외부에서 임의 trace ID를 주입하는 것을 허용할지, ACL을 둘지 판단한다.             |
 
 운영 적용까지 고려한다면, CoreDNS fork보다 OpenTelemetry OBI의 DNS/network observability 또는 application-side DNS instrumentation 쪽이 더 현실적인 대안일 수 있다.
 
@@ -328,21 +328,21 @@ GET /resolve-and-call
 
 이 방식의 장점은 application trace tree와 자연스럽게 이어진다는 점이다. DNS lookup span은 application process 안에서 생성되므로 현재 active span context를 그대로 parent로 사용할 수 있다.
 
-| 장점                                  | 설명                                                                                  |
-| ------------------------------------- | ------------------------------------------------------------------------------------- |
-| request 단위 원인 분석이 쉽다         | 특정 API 요청에서 DNS lookup 시간이 얼마나 걸렸는지 바로 볼 수 있다.                  |
-| CoreDNS 수정이 필요 없다              | application instrumentation 또는 runtime/library hook만으로 시작할 수 있다.            |
-| HTTP outbound span과 함께 보기 좋다   | 외부 호출 전 DNS resolution 지연과 HTTP 지연을 같은 trace에서 비교할 수 있다.          |
-| parent-child 관계가 명확하다          | span이 application 내부에서 생성되므로 trace context propagation 문제가 상대적으로 작다. |
+| 장점                                | 설명                                                                                     |
+| ----------------------------------- | ---------------------------------------------------------------------------------------- |
+| request 단위 원인 분석이 쉽다       | 특정 API 요청에서 DNS lookup 시간이 얼마나 걸렸는지 바로 볼 수 있다.                     |
+| CoreDNS 수정이 필요 없다            | application instrumentation 또는 runtime/library hook만으로 시작할 수 있다.              |
+| HTTP outbound span과 함께 보기 좋다 | 외부 호출 전 DNS resolution 지연과 HTTP 지연을 같은 trace에서 비교할 수 있다.            |
+| parent-child 관계가 명확하다        | span이 application 내부에서 생성되므로 trace context propagation 문제가 상대적으로 작다. |
 
 한계도 명확하다.
 
-| 한계                           | 설명                                                                                           |
-| ------------------------------ | ---------------------------------------------------------------------------------------------- |
-| CoreDNS 내부 처리는 보이지 않는다 | CoreDNS cache hit/miss, plugin chain, upstream forward 여부는 알 수 없다.                       |
-| runtime/library 의존성이 있다   | 언어별 DNS resolver hook이나 instrumentation 지원이 필요하다.                                   |
-| 실제 packet 발생 여부가 애매할 수 있다 | OS/runtime cache에서 처리된 lookup과 실제 DNS packet이 나간 lookup을 구분하기 어려울 수 있다. |
-| qname privacy/cardinality 관리가 필요하다 | query name은 민감 정보이거나 high-cardinality attribute가 될 수 있다.                          |
+| 한계                                      | 설명                                                                                          |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------- |
+| CoreDNS 내부 처리는 보이지 않는다         | CoreDNS cache hit/miss, plugin chain, upstream forward 여부는 알 수 없다.                     |
+| runtime/library 의존성이 있다             | 언어별 DNS resolver hook이나 instrumentation 지원이 필요하다.                                 |
+| 실제 packet 발생 여부가 애매할 수 있다    | OS/runtime cache에서 처리된 lookup과 실제 DNS packet이 나간 lookup을 구분하기 어려울 수 있다. |
+| qname privacy/cardinality 관리가 필요하다 | query name은 민감 정보이거나 high-cardinality attribute가 될 수 있다.                         |
 
 따라서 application DNS span은 “CoreDNS가 어떻게 처리했는가”보다 “이 application request 안에서 DNS lookup이 병목이었는가”를 확인하는 데 적합하다.
 
@@ -364,14 +364,14 @@ Kernel / eBPF
 
 관측 가능한 정보의 예시는 다음과 같다.
 
-| 정보                  | 의미                                      |
-| --------------------- | ----------------------------------------- |
-| query name / query type | 어떤 이름과 record type을 조회했는지 확인한다. |
-| response code         | `NOERROR`, `NXDOMAIN`, `SERVFAIL` 등 실패 유형을 본다. |
+| 정보                    | 의미                                                   |
+| ----------------------- | ------------------------------------------------------ |
+| query name / query type | 어떤 이름과 record type을 조회했는지 확인한다.         |
+| response code           | `NOERROR`, `NXDOMAIN`, `SERVFAIL` 등 실패 유형을 본다. |
 | resolver/server address | 어떤 resolver 또는 CoreDNS endpoint로 질의했는지 본다. |
-| latency               | DNS request와 response 사이의 시간을 본다. |
-| source workload       | 어떤 pod/workload가 DNS query를 발생시켰는지 본다. |
-| transport/flow        | UDP/TCP, socket/flow 수준의 네트워크 정보를 본다. |
+| latency                 | DNS request와 response 사이의 시간을 본다.             |
+| source workload         | 어떤 pod/workload가 DNS query를 발생시켰는지 본다.     |
+| transport/flow          | UDP/TCP, socket/flow 수준의 네트워크 정보를 본다.      |
 
 다만 eBPF/OBI도 trace 관계를 항상 정확한 parent-child로 복원할 수 있는 것은 아니다. DNS packet 자체에는 trace context가 없기 때문이다. 따라서 correlation은 보통 다음 단서들을 조합한다.
 
@@ -388,19 +388,19 @@ known trace context
 
 OBI의 trace-correlated network flow 논의에서도 이 문제가 드러난다. network flow와 application trace는 서로 다른 abstraction layer이므로 항상 1:1 관계가 아니다.
 
-| 관계 예시              | 의미                                                                 |
-| ---------------------- | -------------------------------------------------------------------- |
-| 하나의 trace -> 여러 DNS query | 한 요청이 여러 hostname resolve, retry, reconnect를 만들 수 있다.       |
-| 하나의 flow -> 여러 trace      | long-lived connection이나 shared resolver flow는 여러 요청이 공유할 수 있다. |
-| 여러 trace -> 하나의 network view | network 관점에서는 하나의 resolver/workload edge로 집계될 수 있다.        |
+| 관계 예시                         | 의미                                                                         |
+| --------------------------------- | ---------------------------------------------------------------------------- |
+| 하나의 trace -> 여러 DNS query    | 한 요청이 여러 hostname resolve, retry, reconnect를 만들 수 있다.            |
+| 하나의 flow -> 여러 trace         | long-lived connection이나 shared resolver flow는 여러 요청이 공유할 수 있다. |
+| 여러 trace -> 하나의 network view | network 관점에서는 하나의 resolver/workload edge로 집계될 수 있다.           |
 
 그래서 eBPF/OBI 방식에서는 상황에 따라 세 모델을 구분해야 한다.
 
-| 모델                         | 설명                                                                                  |
-| ---------------------------- | ------------------------------------------------------------------------------------- |
-| application trace 안에 child span 추가 | correlation이 충분히 명확하면 `dns.resolve` 또는 network span을 기존 trace에 붙인다.       |
-| Span Link 사용               | parent-child로 단정하기 어렵지만 관련성은 있을 때 link로 연결한다.                    |
-| metrics/log/event 기반 correlation | trace에 직접 붙이지 않고 dashboard/query에서 workload, qname, time window로 연결한다. |
+| 모델                                   | 설명                                                                                  |
+| -------------------------------------- | ------------------------------------------------------------------------------------- |
+| application trace 안에 child span 추가 | correlation이 충분히 명확하면 `dns.resolve` 또는 network span을 기존 trace에 붙인다.  |
+| Span Link 사용                         | parent-child로 단정하기 어렵지만 관련성은 있을 때 link로 연결한다.                    |
+| metrics/log/event 기반 correlation     | trace에 직접 붙이지 않고 dashboard/query에서 workload, qname, time window로 연결한다. |
 
 즉 eBPF/OBI는 protocol propagation을 대체하는 것이 아니라, 실제 packet/flow evidence를 기반으로 DNS/network 문제를 application trace와 최대한 연결해 보는 접근이다.
 
@@ -408,11 +408,11 @@ OBI의 trace-correlated network flow 논의에서도 이 문제가 드러난다.
 
 세 접근은 대체재라기보다 서로 다른 계층을 본다.
 
-| 접근                         | 보는 위치                    | 강한 질문                                                       | 약한 질문                                                              |
-| ---------------------------- | ---------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| Application DNS span         | application process 내부      | “이 요청에서 DNS lookup이 느렸는가?”                            | “CoreDNS가 cache/plugin/upstream 중 어디서 처리했는가?”                 |
-| eBPF/OBI DNS/network 관측    | node/kernel/network level      | “어떤 workload가 어떤 DNS error/latency/flow를 만들었는가?”      | “정확히 어떤 span의 child인가?”를 항상 보장하기 어렵다.                 |
-| CoreDNS trace plugin         | CoreDNS plugin chain 내부      | “CoreDNS가 query를 어떤 plugin chain과 upstream 경로로 처리했는가?” | “이 DNS query가 어떤 application trace의 일부인가?”를 자동으로 알기 어렵다. |
+| 접근                      | 보는 위치                 | 강한 질문                                                           | 약한 질문                                                                   |
+| ------------------------- | ------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Application DNS span      | application process 내부  | “이 요청에서 DNS lookup이 느렸는가?”                                | “CoreDNS가 cache/plugin/upstream 중 어디서 처리했는가?”                     |
+| eBPF/OBI DNS/network 관측 | node/kernel/network level | “어떤 workload가 어떤 DNS error/latency/flow를 만들었는가?”         | “정확히 어떤 span의 child인가?”를 항상 보장하기 어렵다.                     |
+| CoreDNS trace plugin      | CoreDNS plugin chain 내부 | “CoreDNS가 query를 어떤 plugin chain과 upstream 경로로 처리했는가?” | “이 DNS query가 어떤 application trace의 일부인가?”를 자동으로 알기 어렵다. |
 
 따라서 이상적인 운영 관측 모델은 다음처럼 볼 수 있다.
 
@@ -442,12 +442,12 @@ Application DNS span은 request causality를 보여주고, eBPF/OBI는 실제 pa
 
 AKS 운영 관점에서는 다음 순서가 현실적이다.
 
-| 우선순위 | 접근                          | 이유                                                                                  |
-| -------- | ----------------------------- | ------------------------------------------------------------------------------------- |
-| 1        | Application 내부 DNS span      | trace tree에 가장 자연스럽게 붙고, application latency 원인 분석에 바로 유용하다.       |
-| 2        | eBPF/OBI 기반 DNS/network 관측 | workload/cluster 전체 DNS 품질, error, resolver latency를 보는 데 유리하다.             |
+| 우선순위 | 접근                           | 이유                                                                                             |
+| -------- | ------------------------------ | ------------------------------------------------------------------------------------------------ |
+| 1        | Application 내부 DNS span      | trace tree에 가장 자연스럽게 붙고, application latency 원인 분석에 바로 유용하다.                |
+| 2        | eBPF/OBI 기반 DNS/network 관측 | workload/cluster 전체 DNS 품질, error, resolver latency를 보는 데 유리하다.                      |
 | 3        | CoreDNS trace plugin           | CoreDNS 내부 plugin chain 진단에는 유용하지만, 상시 운영은 sampling/부하/노이즈 검토가 필요하다. |
-| 4        | EDNS TRACEPARENT custom 구현   | 기술적으로 흥미로운 PoC지만, application/resolver/CoreDNS를 모두 바꿔야 해 운영 적용성이 낮다. |
+| 4        | EDNS TRACEPARENT custom 구현   | 기술적으로 흥미로운 PoC지만, application/resolver/CoreDNS를 모두 바꿔야 해 운영 적용성이 낮다.   |
 
 결론적으로, application trace와 DNS를 “같은 trace tree”로 붙이는 목적이라면 application 내부 DNS span이 가장 현실적이다. 반면 cluster/workload 관점에서 DNS 문제를 탐지하고 싶다면 eBPF/OBI 기반 DNS observability가 더 적합하다. CoreDNS trace plugin은 CoreDNS 내부 처리 경로를 설명하는 진단 도구로 남기는 것이 자연스럽다.
 
