@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ndots-lab
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ndots-target
+  namespace: ndots-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ndots-target
+  template:
+    metadata:
+      labels:
+        app: ndots-target
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27-alpine
+          ports:
+            - name: http
+              containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ndots-target
+  namespace: ndots-lab
+spec:
+  type: ClusterIP
+  selector:
+    app: ndots-target
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dns-client-default
+  namespace: ndots-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dns-client-default
+  template:
+    metadata:
+      labels:
+        app: dns-client-default
+    spec:
+      containers:
+        - name: netshoot
+          image: nicolaka/netshoot:v0.13
+          command:
+            - /bin/sh
+            - -c
+            - sleep infinity
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dns-client-ndots1
+  namespace: ndots-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dns-client-ndots1
+  template:
+    metadata:
+      labels:
+        app: dns-client-ndots1
+    spec:
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
+      containers:
+        - name: netshoot
+          image: nicolaka/netshoot:v0.13
+          command:
+            - /bin/sh
+            - -c
+            - sleep infinity
