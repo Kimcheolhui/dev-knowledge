@@ -1,0 +1,2692 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CoreDNS on AKS Deep Dive</title>
+    <style>
+      :root {
+        --bg: #f5f7f9;
+        --paper: #ffffff;
+        --ink: #172026;
+        --muted: #5e6b75;
+        --soft: #eef3f6;
+        --soft-2: #e7eef3;
+        --line: #ccd6de;
+        --line-dark: #95a5b0;
+        --nav: #10212b;
+        --nav-ink: #dce8ef;
+        --nav-muted: #9fb0ba;
+        --dns: #0f6f7a;
+        --aks: #3066be;
+        --warn: #a35b00;
+        --ok: #267047;
+        --danger: #a33a35;
+        --code-bg: #111820;
+        --code-ink: #e8f0f5;
+        --shadow: 0 16px 38px rgba(16, 33, 43, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        padding-left: 184px;
+        background:
+          linear-gradient(
+            90deg,
+            rgba(48, 102, 190, 0.045) 0 1px,
+            transparent 1px 100%
+          ),
+          linear-gradient(
+            0deg,
+            rgba(15, 111, 122, 0.035) 0 1px,
+            transparent 1px 100%
+          ),
+          var(--bg);
+        background-size: 42px 42px;
+        color: var(--ink);
+        font-family:
+          "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", system-ui,
+          sans-serif;
+        line-height: 1.78;
+        letter-spacing: 0;
+      }
+
+      a {
+        color: var(--aks);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .quicknav {
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: 184px;
+        padding: 18px 12px;
+        overflow-y: auto;
+        background: var(--nav);
+        color: var(--nav-ink);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        z-index: 20;
+      }
+
+      .quicknav strong {
+        display: block;
+        padding: 4px 8px 14px;
+        color: #ffffff;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+      }
+
+      .quicknav a {
+        display: grid;
+        grid-template-columns: 36px 1fr;
+        gap: 6px;
+        align-items: center;
+        padding: 7px 8px;
+        border-radius: 7px;
+        color: var(--nav-muted);
+        font-size: 12.5px;
+        font-weight: 720;
+        line-height: 1.2;
+      }
+
+      .quicknav a:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        text-decoration: none;
+      }
+      .quicknav .n {
+        color: #86d7df;
+        font-weight: 850;
+      }
+
+      .wrap {
+        width: min(1160px, calc(100% - 44px));
+        margin: 0 auto;
+      }
+
+      header {
+        min-height: 70vh;
+        display: grid;
+        align-items: center;
+        padding: 76px 0 64px;
+        border-bottom: 1px solid var(--line);
+        background:
+          radial-gradient(
+            circle at 82% 20%,
+            rgba(15, 111, 122, 0.14),
+            transparent 32%
+          ),
+          linear-gradient(180deg, #ffffff 0%, #f7fafb 100%);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--dns);
+        font-size: 13px;
+        font-weight: 850;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 44px;
+        height: 2px;
+        background: var(--dns);
+      }
+
+      h1 {
+        margin: 18px 0 20px;
+        max-width: 980px;
+        font-size: clamp(38px, 5vw, 68px);
+        line-height: 1.05;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 920px;
+        color: var(--muted);
+        font-size: 20px;
+        line-height: 1.68;
+      }
+
+      section {
+        padding: 58px 0;
+        border-bottom: 1px solid var(--line);
+        scroll-margin-top: 12px;
+      }
+
+      section > h2,
+      section .section-head h2 {
+        margin: 0 0 12px;
+        font-size: 32px;
+        line-height: 1.22;
+        letter-spacing: 0;
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 270px;
+        gap: 24px;
+        align-items: end;
+        margin-bottom: 24px;
+      }
+
+      .section-head.single {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: 860px;
+      }
+
+      .section-kicker {
+        color: var(--dns);
+        font-size: 13px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .section-summary {
+        margin: 0;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      h3 {
+        margin: 28px 0 10px;
+        font-size: 21px;
+        line-height: 1.3;
+      }
+
+      h4 {
+        margin: 20px 0 8px;
+        font-size: 17px;
+        color: var(--dns);
+      }
+
+      p {
+        margin: 10px 0;
+      }
+      ul,
+      ol {
+        margin: 8px 0 8px 22px;
+        padding: 0;
+      }
+      li {
+        margin: 4px 0;
+      }
+      strong {
+        color: #0c5660;
+      }
+
+      mark {
+        padding: 0 0.22em;
+        border-radius: 4px;
+        background: linear-gradient(
+          180deg,
+          transparent 42%,
+          rgba(255, 224, 102, 0.82) 42%
+        );
+        color: inherit;
+        font-weight: 820;
+      }
+
+      .red {
+        color: var(--danger);
+        font-weight: 850;
+      }
+
+      .focus-line {
+        margin: 16px 0;
+        padding: 13px 15px;
+        border-left: 5px solid var(--dns);
+        border-radius: 7px;
+        background: #eef8fa;
+        color: #17333a;
+        font-weight: 760;
+      }
+
+      code {
+        padding: 1px 5px;
+        border-radius: 5px;
+        background: #edf4f6;
+        color: #064b54;
+        font-family:
+          "JetBrains Mono", "Noto Sans Mono CJK KR", ui-monospace,
+          SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.92em;
+      }
+
+      pre {
+        margin: 14px 0;
+        padding: 18px 20px;
+        overflow-x: auto;
+        border-radius: 8px;
+        border: 1px solid #26333d;
+        background: var(--code-bg);
+        color: var(--code-ink);
+        line-height: 1.56;
+        box-shadow: var(--shadow);
+      }
+
+      pre code {
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        font-size: 13.5px;
+      }
+
+      pre code .code-hi {
+        display: inline;
+        padding: 0 5px;
+        border-radius: 5px;
+        background: rgba(255, 224, 102, 0.18);
+        color: #ffe27a;
+        font-weight: 850;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+      }
+
+      .grid2,
+      .grid3,
+      .grid4 {
+        display: grid;
+        gap: 16px;
+        margin: 18px 0;
+      }
+      .grid2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .grid3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .grid4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .card,
+      .callout,
+      .figure,
+      .flow,
+      .table-wrap {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 8px 22px rgba(16, 33, 43, 0.05);
+      }
+
+      .card {
+        padding: 18px 20px;
+      }
+      .card h3,
+      .card h4 {
+        margin-top: 0;
+      }
+      .card p:last-child,
+      .callout p:last-child {
+        margin-bottom: 0;
+      }
+
+      .callout {
+        margin: 20px 0;
+        padding: 18px 20px;
+        border-left: 6px solid var(--dns);
+      }
+      .callout.warn {
+        border-left-color: var(--warn);
+        background: #fff8ed;
+      }
+      .callout.ok {
+        border-left-color: var(--ok);
+        background: #f0fbf4;
+      }
+      .callout.danger {
+        border-left-color: var(--danger);
+        background: #fff1f0;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 2px 8px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .keyline {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        margin-top: 34px;
+        border: 1px solid var(--line-dark);
+        border-radius: 8px;
+        overflow: hidden;
+        background: var(--paper);
+      }
+      .keyline span {
+        padding: 14px 10px;
+        text-align: center;
+        border-right: 1px solid var(--line);
+        font-weight: 780;
+        color: var(--muted);
+      }
+      .keyline span:last-child {
+        border-right: 0;
+      }
+
+      .flow {
+        padding: 18px;
+      }
+
+      .diagram-panel {
+        margin: 18px 0;
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfdfe;
+        box-shadow: var(--shadow);
+      }
+
+      .diagram-title {
+        margin: 0 0 14px;
+        color: var(--dns);
+        font-size: 15px;
+        font-weight: 850;
+        letter-spacing: 0.02em;
+      }
+
+      .chain-diagram {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .chain-row {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .chain-step {
+        position: relative;
+        min-height: 92px;
+        padding: 13px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+      }
+
+      .chain-step::after {
+        content: "→";
+        position: absolute;
+        right: -10px;
+        top: 50%;
+        transform: translate(50%, -50%);
+        color: var(--line-dark);
+        font-weight: 900;
+      }
+
+      .chain-step:last-child::after {
+        display: none;
+      }
+
+      .chain-step b {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--ink);
+        font-size: 14px;
+      }
+
+      .chain-step span {
+        color: var(--muted);
+        font-size: 12.5px;
+        line-height: 1.45;
+      }
+
+      .decision-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .decision {
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+      }
+
+      .decision b {
+        display: block;
+        color: var(--dns);
+        font-size: 13px;
+        margin-bottom: 3px;
+      }
+
+      .decision span {
+        color: var(--muted);
+        font-size: 12.5px;
+        line-height: 1.45;
+      }
+
+      .plugin-order-diagram {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .plugin-order-stage {
+        position: relative;
+        min-height: 92px;
+        padding: 13px 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .plugin-order-stage::after {
+        content: "→";
+        position: absolute;
+        right: -13px;
+        top: 50%;
+        transform: translate(50%, -50%);
+        color: var(--line-dark);
+        font-weight: 900;
+      }
+
+      .plugin-order-stage:nth-child(6)::after,
+      .plugin-order-stage:last-child::after {
+        display: none;
+      }
+
+      .plugin-order-stage b {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--ink);
+        font-size: 13.5px;
+      }
+
+      .plugin-order-stage span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.42;
+      }
+
+      .plugin-order-stage.ellipsis {
+        display: grid;
+        place-content: center;
+        background: var(--soft-2);
+        color: var(--muted);
+        font-size: 24px;
+        font-weight: 900;
+      }
+
+      .runtime-diagram {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        gap: 16px;
+        align-items: start;
+      }
+
+      .trace-map {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr);
+        gap: 14px;
+        align-items: stretch;
+      }
+
+      .trace-lane {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+      }
+
+      .trace-lane h4 {
+        margin-top: 0;
+      }
+
+      .trace-node {
+        margin: 8px 0;
+        padding: 10px 11px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: #fff;
+      }
+
+      .trace-node b {
+        display: block;
+        color: var(--ink);
+        font-size: 13px;
+      }
+
+      .trace-node span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.42;
+      }
+
+      .trace-gap {
+        display: grid;
+        place-items: center;
+        color: var(--danger);
+        font-size: 12px;
+        font-weight: 850;
+        text-align: center;
+      }
+
+      .trace-gap::before {
+        content: "≠";
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        margin-bottom: 8px;
+        border: 2px solid var(--danger);
+        border-radius: 999px;
+        background: #fff;
+        font-size: 24px;
+      }
+
+      .compact-table td,
+      .compact-table th {
+        font-size: 13px;
+      }
+
+      .goroutine-pool,
+      .thread-pool {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+      }
+
+      .pool-title {
+        margin-bottom: 10px;
+        color: var(--ink);
+        font-weight: 850;
+      }
+
+      .goroutine-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .goroutine,
+      .thread {
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: #fff;
+      }
+
+      .goroutine b,
+      .thread b {
+        display: block;
+        color: var(--aks);
+        font-size: 13px;
+      }
+
+      .goroutine span,
+      .thread span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.4;
+      }
+
+      .thread-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .scheduler-note {
+        margin-top: 12px;
+        padding: 11px 12px;
+        border-radius: 7px;
+        background: #eef8fa;
+        color: #17333a;
+        font-size: 13px;
+        font-weight: 720;
+      }
+      .flow-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+        align-items: stretch;
+      }
+      .node {
+        min-height: 78px;
+        display: grid;
+        align-content: center;
+        gap: 4px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+      }
+      .node b {
+        display: block;
+        color: var(--ink);
+        font-size: 14px;
+      }
+      .node span {
+        color: var(--muted);
+        font-size: 12.5px;
+        line-height: 1.42;
+        overflow-wrap: anywhere;
+        word-break: keep-all;
+      }
+
+      .flow-row.ordered {
+        grid-template-columns:
+          minmax(0, 1fr) 28px minmax(0, 1fr) 28px minmax(0, 1fr)
+          28px minmax(0, 1fr) 28px minmax(0, 1fr) 28px minmax(0, 1fr);
+        gap: 8px;
+        align-items: center;
+      }
+
+      .flow-arrow {
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border: 1px solid var(--line-dark);
+        border-radius: 999px;
+        background: #fff;
+        color: var(--dns);
+        font-size: 18px;
+        font-weight: 950;
+        line-height: 1;
+        box-shadow: 0 4px 12px rgba(16, 33, 43, 0.08);
+      }
+
+      .arrow {
+        display: none;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+        gap: 22px;
+        align-items: start;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        line-height: 1.58;
+      }
+      .table-wrap {
+        overflow: hidden;
+        margin: 16px 0;
+      }
+      th,
+      td {
+        padding: 11px 12px;
+        text-align: left;
+        vertical-align: top;
+        border-bottom: 1px solid var(--line);
+      }
+      th {
+        background: #e9f0f4;
+        color: var(--ink);
+        font-weight: 850;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .figure {
+        padding: 14px;
+        margin: 18px 0;
+      }
+      .figure img {
+        display: block;
+        max-width: 100%;
+        border-radius: 6px;
+        border: 1px solid var(--line);
+        background: #fff;
+      }
+      .caption {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 12.5px;
+        line-height: 1.5;
+      }
+
+      .metric-list {
+        columns: 2;
+        column-gap: 28px;
+        margin-top: 10px;
+      }
+      .metric-list li {
+        break-inside: avoid;
+      }
+
+      .plugin-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 14px;
+      }
+      .plugin {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfdfe;
+      }
+      .plugin b {
+        display: block;
+        color: var(--dns);
+        margin-bottom: 4px;
+      }
+      .plugin p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .scenario {
+        margin: 24px 0;
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--paper);
+      }
+      .scenario h3 {
+        margin-top: 0;
+      }
+
+      footer {
+        padding: 40px 0 62px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      @media (max-width: 1080px) {
+        body {
+          padding-left: 0;
+        }
+        .quicknav {
+          position: static;
+          width: auto;
+          max-height: none;
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          border-right: 0;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .quicknav strong {
+          grid-column: 1 / -1;
+        }
+        .section-head,
+        .split,
+        .grid2,
+        .grid3,
+        .grid4,
+        .plugin-grid,
+        .chain-row,
+        .decision-grid,
+        .plugin-order-diagram,
+        .runtime-diagram,
+        .trace-map,
+        .goroutine-list {
+          grid-template-columns: 1fr;
+        }
+
+        .trace-gap {
+          padding: 10px 0;
+        }
+
+        .chain-step::after,
+        .plugin-order-stage::after {
+          display: none;
+        }
+
+        .flow-arrow {
+          display: none;
+        }
+        header {
+          min-height: auto;
+        }
+        .keyline {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .metric-list {
+          columns: 1;
+        }
+      }
+
+      @media print {
+        body {
+          padding-left: 0;
+          background: #fff;
+        }
+        .quicknav {
+          display: none;
+        }
+        section {
+          break-inside: avoid;
+        }
+        a {
+          color: inherit;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="quicknav" aria-label="문서 목차">
+      <strong>CoreDNS</strong>
+      <a href="#top"><span class="n">0</span><span>Intro</span></a>
+      <a href="#overview"><span class="n">1</span><span>Overview</span></a>
+      <a href="#role"><span class="n">1-1</span><span>K8s 역할</span></a>
+      <a href="#plugin-chain"
+        ><span class="n">2-1</span><span>Plugin-chain</span></a
+      >
+      <a href="#go-runtime"><span class="n">2-2</span><span>Go 동시성</span></a>
+      <a href="#corefile"><span class="n">3</span><span>Corefile</span></a>
+      <a href="#plugins"><span class="n">4</span><span>Plugins</span></a>
+      <a href="#flow"><span class="n">5</span><span>Query Flow</span></a>
+      <a href="#observability"
+        ><span class="n">6</span><span>Metric/Log/Trace</span></a
+      >
+      <a href="#troubleshooting"
+        ><span class="n">7</span><span>Scenarios</span></a
+      >
+      <a href="#wrapup"><span class="n">8</span><span>Checklist</span></a>
+    </nav>
+
+    <header id="top">
+      <div class="wrap">
+        <div class="eyebrow">AKS · CoreDNS · Kubernetes DNS</div>
+        <h1>CoreDNS on AKS Deep Dive</h1>
+        <p class="lead">
+          Kubernetes DNS에서 CoreDNS가 맡는 역할, Corefile과
+          <mark>plugin-chain 구조</mark>, Pod resolver부터 upstream까지의
+          <mark>query flow</mark>, 그리고 metric/log/trace와 주요 운영
+          시나리오를 다룹니다.
+        </p>
+        <div class="keyline" aria-label="CoreDNS topics">
+          <span>Role</span>
+          <span>Plugin-chain</span>
+          <span>Go Runtime</span>
+          <span>Corefile</span>
+          <span>Query Flow</span>
+          <span>Observability</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section id="overview">
+        <div class="section-head single">
+          <div>
+            <div class="section-kicker">Overview</div>
+            <h2>스터디에서 다루는 범위</h2>
+            <p class="section-summary">
+              CoreDNS 역할 → 구조 → Corefile/plugin → query flow → 관측 →
+              트러블슈팅 시나리오 순서로 진행합니다.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid4">
+          <div class="card">
+            <h3>1. 역할</h3>
+            <p>
+              Kubernetes DNS, Service/Pod DNS record, kubelet이 만드는 Pod
+              <code>/etc/resolv.conf</code>.
+            </p>
+          </div>
+          <div class="card">
+            <h3>2-1. Plugin-chain</h3>
+            <p>
+              CoreDNS가 plugin을 chain으로 연결해 query를 처리하고, 각 plugin이
+              응답하거나 다음 plugin으로 넘기는 방식.
+            </p>
+          </div>
+          <div class="card">
+            <h3>2-2. Go 동시성</h3>
+            <p>
+              goroutine이 DNS 요청을 병렬 처리하고, I/O 대기 중에도 다른 query가
+              계속 처리되는 runtime 모델.
+            </p>
+          </div>
+          <div class="card">
+            <h3>3. 설정</h3>
+            <p>
+              Corefile 구조, AKS의 <code>coredns</code>와
+              <code>coredns-custom</code>, plugin 실행 순서.
+            </p>
+          </div>
+          <div class="card">
+            <h3>4. Query flow</h3>
+            <p>
+              Pod → resolver → kube-dns Service → CoreDNS Pod → plugin chain →
+              kubernetes/forward.
+            </p>
+          </div>
+          <div class="card">
+            <h3>5. Observability</h3>
+            <p>
+              metrics, logs, trace가 어떻게 노출되고 AKS/Azure Monitor에서 어떤
+              설정이 필요한지.
+            </p>
+          </div>
+          <div class="card">
+            <h3>6. Scenarios</h3>
+            <p>
+              pod 내부 기본 진단, conditional forward, latency/timeout, ndots
+              증폭, cache/prefetch.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="role">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">1 · Kubernetes DNS</div>
+            <h2>Kubernetes에서 CoreDNS의 역할</h2>
+            <p class="section-summary">
+              CoreDNS는 Kubernetes 클러스터 내부의 DNS resolver입니다. Pod는
+              <mark>kubelet이 구성한 <code>/etc/resolv.conf</code></mark
+              >를 통해 CoreDNS Service ClusterIP로 DNS query를 보냅니다.
+            </p>
+          </div>
+          <div class="card">
+            <strong>kube-dns 이름</strong>
+            <p>
+              구현은 CoreDNS지만, KubeDNS 호환성을 위해 Service 이름은 보통
+              <code>kube-dns</code>입니다.
+            </p>
+          </div>
+        </div>
+
+        <div class="split">
+          <div>
+            <h3>Pod가 시작할 때 들어가는 resolver 설정</h3>
+            <pre><code>search &lt;namespace&gt;.svc.cluster.local svc.cluster.local cluster.local
+nameserver &lt;CoreDNS Service ClusterIP&gt;
+options ndots:5</code></pre>
+            <p>
+              Pod는 이 설정을 보고 CoreDNS Service ClusterIP로 DNS query를
+              보냅니다.
+              <mark
+                >이 파일은 뒤에서 다룰 <code>ndots</code> query 증폭의
+                출발점</mark
+              >이기도 합니다.
+            </p>
+          </div>
+          <div class="flow">
+            <div class="flow-row">
+              <div class="node">
+                <b>kubelet</b
+                ><span
+                  >Pod DNS policy와 cluster DNS 설정을 바탕으로 resolv.conf
+                  구성</span
+                >
+              </div>
+              <div class="node">
+                <b>Pod resolver</b
+                ><span>nameserver/search/ndots를 읽고 query 생성</span>
+              </div>
+              <div class="node">
+                <b>kube-dns SVC</b><span>CoreDNS Pod로 DNS 트래픽 분산</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3>CoreDNS의 3가지 역할</h3>
+        <div class="grid3">
+          <div class="card">
+            <h3>Service name resolving</h3>
+            <p>
+              Service 이름 또는 FQDN을 ClusterIP로 resolve합니다. CoreDNS는 API
+              server를 watch하여 Service, EndpointSlice, Namespace, Pod 정보를
+              동기화합니다.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Reverse DNS</h3>
+            <p>
+              Pod IP나 Service ClusterIP에 대해 Kubernetes DNS name을 PTR
+              record로 반환합니다. 네트워크 로그에 IP만 남았을 때 유용합니다.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Non-cluster forwarding</h3>
+            <p>
+              Kubernetes zone 밖이고 cache hit가 아닌 FQDN은 Corefile의
+              <code>forward</code> 경로를 통해 upstream resolver로 전달합니다.
+            </p>
+          </div>
+        </div>
+        <pre><code>dig -x 10.96.20.30
+# connection log에 찍힌 IP가 어떤 Kubernetes DNS name인지 확인할 때 사용</code></pre>
+      </section>
+
+      <section id="plugin-chain">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">2-1 · Plugin-chain</div>
+            <h2>CoreDNS는 plugin-chain으로 query를 처리한다</h2>
+            <p class="section-summary">
+              CoreDNS의 기능은 대부분 plugin으로 구성됩니다. 각 plugin은 query를
+              보고 <mark>직접 응답할지</mark>,
+              <mark>다음 plugin으로 넘길지</mark>, 또는
+              <mark>upstream으로 전달할지</mark>를 결정합니다.
+            </p>
+          </div>
+          <div class="card">
+            <strong>CoreDNS is powered by plugins</strong>
+            <p>
+              Kubernetes service discovery, cache, forwarding, metrics,
+              logging이 모두 plugin 단위로 붙습니다.
+            </p>
+          </div>
+        </div>
+
+        <div class="diagram-panel">
+          <p class="diagram-title">Plugin-chain 처리 모델</p>
+          <div class="chain-diagram">
+            <div class="chain-row">
+              <div class="chain-step">
+                <b>DNS query</b>
+                <span>CoreDNS server block으로 들어오는 요청</span>
+              </div>
+              <div class="chain-step">
+                <b>compiled order</b>
+                <span>Corefile 순서가 아니라 plugin.cfg 기준 순서</span>
+              </div>
+              <div class="chain-step">
+                <b>plugin decision</b>
+                <span>응답하거나, 다음 plugin 호출하거나, fallthrough</span>
+              </div>
+              <div class="chain-step">
+                <b>backend work</b>
+                <span>cache, Kubernetes API cache, upstream resolver 등</span>
+              </div>
+              <div class="chain-step">
+                <b>DNS response</b>
+                <span>A/PTR/NXDOMAIN/SERVFAIL 등으로 반환</span>
+              </div>
+            </div>
+            <div class="decision-grid">
+              <div class="decision">
+                <b>응답하고 chain 종료</b>
+                <span
+                  >cache hit 또는 kubernetes plugin이 authoritative answer를
+                  가진 경우</span
+                >
+              </div>
+              <div class="decision">
+                <b>다음 plugin 호출</b>
+                <span
+                  >현재 plugin이 query를 처리하지 않고 다음 단계로 넘기는
+                  경우</span
+                >
+              </div>
+              <div class="decision">
+                <b>끝까지 응답 없음</b>
+                <span
+                  >어떤 plugin도 response를 만들지 못하면
+                  <code>SERVFAIL</code></span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="diagram-panel">
+          <p class="diagram-title">
+            plugin.cfg 기준 실행 순서 예시: AKS Corefile 주요 plugin 발췌
+          </p>
+          <div
+            class="plugin-order-diagram"
+            aria-label="CoreDNS plugin execution order excerpt"
+          >
+            <div class="plugin-order-stage">
+              <b>reload</b>
+              <span>Corefile 변경 감지와 hot reload</span>
+            </div>
+            <div class="plugin-order-stage">
+              <b>ready / health</b>
+              <span>readiness와 liveness endpoint</span>
+            </div>
+            <div class="plugin-order-stage">
+              <b>prometheus</b>
+              <span>DNS request metric 수집</span>
+            </div>
+            <div class="plugin-order-stage">
+              <b>errors / log</b>
+              <span>오류와 query log 기록</span>
+            </div>
+            <div class="plugin-order-stage">
+              <b>loadbalance</b>
+              <span>응답 record 순서 shuffle</span>
+            </div>
+            <div class="plugin-order-stage">
+              <b>cache</b>
+              <span>응답 cache hit/miss 처리</span>
+            </div>
+            <div class="plugin-order-stage ellipsis">...</div>
+            <div class="plugin-order-stage">
+              <b>template</b>
+              <span>패턴 기반 synthetic response</span>
+            </div>
+            <div class="plugin-order-stage">
+              <b>kubernetes</b>
+              <span>cluster.local authoritative answer</span>
+            </div>
+            <div class="plugin-order-stage">
+              <b>loop</b>
+              <span>forwarding loop 감지</span>
+            </div>
+            <div class="plugin-order-stage">
+              <b>forward</b>
+              <span>cluster 외부 query를 upstream으로 전달</span>
+            </div>
+          </div>
+          <div class="caption">
+            Corefile의 나열 순서가 아니라 CoreDNS에 컴파일된
+            <code>plugin.cfg</code> 순서가 기준입니다. 위 diagram은 AKS 기본
+            Corefile에 등장하는 주요 plugin만 발췌한 축약 흐름입니다.
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div>
+            <h3>Corefile은 “구성”이고 실행 순서는 별도다</h3>
+            <p>
+              Corefile은 어떤 plugin을 사용할지와 각 plugin의 argument를
+              보여줍니다. 하지만
+              <span class="red"
+                >Corefile에 적힌 나열 순서가 그대로 실행 순서가 되는 것은
+                아닙니다.</span
+              >
+              실제 순서는 CoreDNS가 컴파일될 때 포함된 <code>plugin.cfg</code>에
+              의해 고정됩니다.
+            </p>
+            <div class="focus-line">
+              운영 관점에서는 “Corefile에 어떤 plugin이 켜져 있는가”와 “plugin
+              chain에서 어떤 plugin이 응답을 만들었는가”를 구분해서 봐야 합니다.
+            </div>
+          </div>
+          <div>
+            <h3>AKS에서 특히 봐야 하는 plugin 그룹</h3>
+            <div class="plugin-grid">
+              <div class="plugin">
+                <b>kubernetes</b>
+                <p>cluster.local zone의 authoritative answer.</p>
+              </div>
+              <div class="plugin">
+                <b>cache</b>
+                <p>TTL 동안 응답을 메모리에 저장.</p>
+              </div>
+              <div class="plugin">
+                <b>forward</b>
+                <p>cluster 밖 query를 upstream resolver로 전달.</p>
+              </div>
+              <div class="plugin">
+                <b>prometheus/log</b>
+                <p>관측과 디버깅을 위한 노출 지점.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout">
+          External plugin도 존재하지만,
+          <span class="red"
+            >AKS에서는 built-in plugin 외 external plugin 사용이
+            제한됩니다.</span
+          >
+          그래서 AKS 운영에서는 기본 제공 plugin을 어떻게 구성하고 관측할지가 더
+          중요합니다.
+        </div>
+      </section>
+
+      <section id="go-runtime">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">2-2 · Go Concurrency</div>
+            <h2>Go runtime은 많은 DNS query를 가볍게 병렬 처리한다</h2>
+            <p class="section-summary">
+              CoreDNS는 Go로 작성되어 있고, DNS 요청 처리는 goroutine 기반
+              concurrency 모델과 잘 맞습니다. 요청마다 무거운 OS thread를 새로
+              만드는 구조가 아닙니다.
+            </p>
+          </div>
+          <div class="card">
+            <strong>핵심 모델</strong>
+            <p>
+              <mark>Go runtime이 goroutine을 OS thread 위에 스케줄링</mark>하고,
+              I/O 대기 중에도 다른 query 처리가 계속 진행됩니다.
+            </p>
+          </div>
+        </div>
+
+        <div class="diagram-panel">
+          <p class="diagram-title">Goroutine 기반 DNS query 처리</p>
+          <div class="runtime-diagram">
+            <div class="goroutine-pool">
+              <div class="pool-title">CoreDNS request goroutines</div>
+              <div class="goroutine-list">
+                <div class="goroutine">
+                  <b>G1</b><span>Service name lookup</span>
+                </div>
+                <div class="goroutine"><b>G2</b><span>cache lookup</span></div>
+                <div class="goroutine">
+                  <b>G3</b><span>upstream forward 대기</span>
+                </div>
+                <div class="goroutine">
+                  <b>G4</b><span>reverse DNS lookup</span>
+                </div>
+              </div>
+              <div class="scheduler-note">
+                하나의 query가 upstream I/O로 대기해도 다른 goroutine의 query는
+                계속 처리될 수 있습니다.
+              </div>
+            </div>
+            <div class="thread-pool">
+              <div class="pool-title">OS threads / CPU cores</div>
+              <div class="thread-list">
+                <div class="thread">
+                  <b>Thread M1</b><span>Go scheduler가 goroutine을 배치</span>
+                </div>
+                <div class="thread">
+                  <b>Thread M2</b><span>CPU core 수에 따라 병렬 처리</span>
+                </div>
+                <div class="thread">
+                  <b>Thread M3</b><span>I/O 대기와 실행 작업을 교차 처리</span>
+                </div>
+              </div>
+              <div class="scheduler-note">
+                CoreDNS가 DNS 요청마다 OS thread를 새로 만드는 모델이 아닙니다.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="figure">
+            <img
+              src="img/e1769566fa.png"
+              alt="Go concurrency model illustration"
+            />
+            <div class="caption">
+              Go runtime이 goroutine을 OS thread 위에 스케줄링하는 흐름.
+            </div>
+          </div>
+          <div>
+            <h3>CoreDNS workload와 잘 맞는 이유</h3>
+            <ul>
+              <li>
+                DNS 요청은 CPU 연산보다
+                <mark>메모리 조회, cache 조회, upstream 질의</mark> 같은 I/O
+                성격이 많습니다.
+              </li>
+              <li>
+                각 goroutine은 독립적으로 plugin chain을 따라가며 DNS response를
+                만들 수 있습니다.
+              </li>
+              <li>
+                하나의 요청이 I/O로 대기하는 동안에도 다른 요청은 계속 처리될 수
+                있습니다.
+              </li>
+              <li>
+                요청이 많아질수록 CPU core 수에 따라 병렬 처리 효과가 나타날 수
+                있습니다.
+              </li>
+            </ul>
+            <div class="callout warn">
+              <strong>plugin 작성/운영 관점</strong>
+              <p>
+                한 plugin 인스턴스가 여러 goroutine에 의해 동시에 호출될 수
+                있으므로 plugin 코드는 <mark>동시에 호출된다는 가정</mark> 아래
+                thread-safe하게 동작해야 합니다.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="corefile">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">3 · Corefile and AKS ConfigMaps</div>
+            <h2>Corefile과 AKS 구성</h2>
+            <p class="section-summary">
+              AKS에서는 기본 <code>coredns</code> ConfigMap을 직접 수정하기보다
+              <mark
+                ><code>coredns-custom</code> ConfigMap을 통해 기본 Corefile에
+                설정을 주입</mark
+              >하는 방식으로 이해하는 것이 안전합니다.
+            </p>
+          </div>
+          <div class="card">
+            <strong>관여 파일</strong>
+            <p>
+              <code>/etc/coredns</code>와 <code>/etc/coredns/custom</code>에
+              각각 <code>coredns</code>, <code>coredns-custom</code> ConfigMap이
+              mount됩니다.
+            </p>
+          </div>
+        </div>
+
+        <h3>Corefile 서버 블록 문법</h3>
+        <pre><code>[SCHEME://]ZONE [:PORT] {
+    PLUGIN [ARGUMENTS]
+}</code></pre>
+
+        <div class="grid3">
+          <div class="card">
+            <h3>ZONE</h3>
+            <p>
+              서버 블록이 담당할 DNS 이름 영역입니다. <code>.</code>은 DNS root
+              zone이므로 사실상 모든 DNS 질의를 의미합니다.
+            </p>
+          </div>
+          <div class="card">
+            <h3>SCHEME</h3>
+            <p>
+              DNS 요청을 받을 프로토콜입니다. 생략 시 UDP/TCP 기반 DNS이며,
+              <code>dns://</code>, <code>https://</code> 형태도 가능합니다.
+            </p>
+          </div>
+          <div class="card">
+            <h3>PORT</h3>
+            <p>
+              listen 포트입니다. 기본값은 53이지만 일반적으로
+              <code>.:53</code>처럼 명시합니다.
+            </p>
+          </div>
+        </div>
+
+        <h3>AKS 기본 CoreDNS Corefile 예시</h3>
+        <pre><code># AKS의 Default CoreDNS Corefile
+<span class="code-hi">.:53 {</span>
+        errors
+        ready
+        health {
+          lameduck 5s
+        }
+        <span class="code-hi">kubernetes cluster.local in-addr.arpa ip6.arpa {</span>
+          pods insecure
+          fallthrough in-addr.arpa ip6.arpa
+          ttl 30
+        }
+        <span class="code-hi">prometheus :9153</span>
+        <span class="code-hi">forward . /etc/resolv.conf</span>
+        <span class="code-hi">cache 30</span>
+        loop
+        reload
+        loadbalance
+        <span class="code-hi">import custom/*.override</span>
+        template ANY ANY internal.cloudapp.net {
+          match "^(?:[^.]+\.){4,}internal\.cloudapp\.net\.$"
+          rcode NXDOMAIN
+          fallthrough
+        }
+        template ANY ANY reddog.microsoft.com {
+          rcode NXDOMAIN
+        }
+    }
+      <span class="code-hi">import custom/*.server</span></code></pre>
+
+        <div class="grid2">
+          <div class="callout warn">
+            <strong>직접 수정 주의</strong>
+            <p>
+              <code>coredns</code> ConfigMap을 직접 수정하면 AKS Control Plane의
+              reconcile 대상이 될 수 있습니다.
+              <span class="red">기본 Corefile 변경 대신</span>
+              <mark><code>coredns-custom</code>을 통한 주입 구조</mark>를
+              사용합니다.
+            </p>
+          </div>
+          <div class="figure">
+            <img
+              src="img/image.png"
+              alt="AKS CoreDNS plugin restriction screenshot"
+            />
+            <div class="caption">
+              AKS에서 CoreDNS built-in plugin과 external plugin 제한을 설명하는
+              화면.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="plugins">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">3 · Plugins</div>
+            <h2>주요 plugin과 실행 순서</h2>
+            <p class="section-summary">
+              Corefile은 어떤 plugin을 사용할지 보여주지만,
+              <mark>실제 plugin 실행 순서는 Corefile에 적힌 순서가 아니라</mark>
+              CoreDNS의
+              <a
+                href="https://github.com/coredns/coredns/blob/master/plugin.cfg"
+                target="_blank"
+                rel="noopener noreferrer"
+                ><code>plugin.cfg</code></a
+              >에 의해 컴파일 시 고정됩니다.
+            </p>
+          </div>
+          <div class="card">
+            <strong>SERVFAIL</strong>
+            <p>
+              plugin chain 끝까지 response가 만들어지지 않으면
+              <code>SERVFAIL</code>이 반환됩니다.
+            </p>
+          </div>
+        </div>
+
+        <div class="plugin-grid">
+          <div class="plugin">
+            <b>kubernetes</b>
+            <p>
+              cluster.local과 cluster domain에 대한 authoritative DNS 데이터를
+              제공하고, API를 watch하여 Service/EndpointSlice/Pod/Namespace
+              cache를 유지합니다.
+            </p>
+          </div>
+          <div class="plugin">
+            <b>forward</b>
+            <p>
+              cluster 외부 도메인을 upstream DNS 서버에 recursive query하여
+              non-authoritative 응답을 반환합니다. UDP, TCP, DNS-over-TLS를
+              지원합니다.
+            </p>
+          </div>
+          <div class="plugin">
+            <b>cache</b>
+            <p>
+              응답 캐싱을 수행합니다. 기본 설정에서는 약 9984개 엔트리와 최대
+              30초 캐시를 언급합니다.
+            </p>
+          </div>
+          <div class="plugin">
+            <b>loop</b>
+            <p>
+              CoreDNS → systemd-resolved → back to CoreDNS 같은 DNS forwarding
+              loop를 감지하고 서버를 정지시킵니다.
+            </p>
+          </div>
+          <div class="plugin">
+            <b>reload</b>
+            <p>
+              약 30초마다 Corefile SHA512 해시를 점검하고, 변경 시 서버 재시작
+              없이 새로운 plugin chain을 로드합니다.
+            </p>
+          </div>
+          <div class="plugin">
+            <b>health / ready</b>
+            <p>
+              <code>/health</code>는 liveness, <code>/ready</code>는 plugin 준비
+              상태를 노출합니다. 하나라도 준비되지 않으면 ready는 503을
+              반환합니다.
+            </p>
+          </div>
+          <div class="plugin">
+            <b>prometheus</b>
+            <p>
+              <code>:9153/metrics</code>로 CoreDNS와 plugin metric을 Prometheus
+              형식으로 노출합니다.
+            </p>
+          </div>
+          <div class="plugin">
+            <b>errors / log</b>
+            <p>
+              errors는 error response를 stdout에 출력하고, log는 query name,
+              response code, duration 등을 기록합니다. log는 상시 활성화 시
+              오버헤드가 있습니다.
+            </p>
+          </div>
+          <div class="plugin">
+            <b>hosts</b>
+            <p>
+              Linux <code>/etc/hosts</code>와 같은 형식의 정적 IP-domain 매핑을
+              CoreDNS를 통해 cluster 차원에서 제공합니다.
+            </p>
+          </div>
+        </div>
+
+        <h3>plugin 목록 확인</h3>
+        <pre><code>kubectl -n kube-system exec deployment/coredns -c coredns -- \
+  coredns -plugins | tr ' ' '\n' | sort</code></pre>
+        <div class="callout">
+          <strong>실행 순서</strong>
+          <p>
+            <span class="red"
+              >Corefile에서 plugin을 나열한 순서는 실행 순서에 영향을 주지
+              않습니다.</span
+            >
+            CoreDNS
+            <a
+              href="https://github.com/coredns/coredns/blob/master/plugin.cfg"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><code>plugin.cfg</code></a
+            >에 정의된 순서가 컴파일 시 고정됩니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="flow">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">4 · Query Flow</div>
+            <h2>K8s 내부 DNS query flow</h2>
+            <p class="section-summary">
+              DNS query 수가 늘어나는 지점과 실제 resolution이 일어나는 지점을
+              분리해서 봅니다. 특히
+              <mark
+                ><code>ndots</code>는 CoreDNS 내부가 아니라 Pod resolver
+                단계</mark
+              >에서 영향을 줍니다.
+            </p>
+          </div>
+          <div class="card">
+            <strong>중요한 오해</strong>
+            <p>
+              <span class="red"
+                >Container 안에 별도 DNS 서버가 떠 있거나 Linux OS가 recursive
+                DNS 서버 역할을 하는 것이 보통은 아닙니다.</span
+              >
+            </p>
+          </div>
+        </div>
+
+        <div class="flow">
+          <div class="flow-row ordered">
+            <div class="node">
+              <b>Application</b
+              ><span>직접 packet을 만들기보다 runtime/libc resolver 호출</span>
+            </div>
+            <div class="flow-arrow" aria-hidden="true">→</div>
+            <div class="node">
+              <b>Resolver</b
+              ><span
+                >Go net.Resolver, JVM cache, socket.getaddrinfo, libuv/c-ares
+                등</span
+              >
+            </div>
+            <div class="flow-arrow" aria-hidden="true">→</div>
+            <div class="node">
+              <b>resolv.conf</b><span>nameserver / search / ndots 확인</span>
+            </div>
+            <div class="flow-arrow" aria-hidden="true">→</div>
+            <div class="node"><b>kube-dns SVC</b><span>ClusterIP:53</span></div>
+            <div class="flow-arrow" aria-hidden="true">→</div>
+            <div class="node">
+              <b>CoreDNS Pod</b><span>plugin chain 실행</span>
+            </div>
+            <div class="flow-arrow" aria-hidden="true">→</div>
+            <div class="node">
+              <b>Response</b
+              ><span>kubernetes plugin 또는 forward/upstream 결과</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>Pod resolv.conf는 누가 만드는가</h3>
+        <div class="grid2">
+          <div>
+            <pre><code>spec:
+  dnsPolicy: ClusterFirst</code></pre>
+            <p>
+              <code>ClusterFirst</code>에서는 Pod의 nameserver가 node의 일반
+              DNS가 아니라 kube-dns Service IP로 설정됩니다.
+            </p>
+          </div>
+          <div class="card">
+            <h3>흐름을 바꾸는 설정</h3>
+            <ul>
+              <li><code>dnsPolicy: Default</code>: node DNS 설정 사용</li>
+              <li>
+                <code>dnsPolicy: None</code>: 사용자가
+                <code>dnsConfig</code> 지정
+              </li>
+              <li>
+                <code>hostNetwork: true</code>: 기본 DNS policy가 달라질 수 있음
+              </li>
+              <li>
+                <code>dnsConfig.options.ndots</code>: Pod 단위
+                <code>ndots</code> override
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>kube-dns Service에서 CoreDNS Pod까지</h3>
+        <pre><code>kubectl -n kube-system get service kube-dns
+kubectl -n kube-system get endpointslice -l kubernetes.io/service-name=kube-dns
+kubectl -n kube-system get pods -l k8s-app=kube-dns -o wide</code></pre>
+        <pre><code>Pod
+  -&gt; kube-dns Service ClusterIP:53
+  -&gt; kube-proxy / dataplane rules
+  -&gt; CoreDNS Pod IP:53</code></pre>
+
+        <h3>CoreDNS 내부 처리 분기</h3>
+        <div class="grid2">
+          <div class="card">
+            <h3>Service name 조회</h3>
+            <pre><code>backend.default.svc.cluster.local.
+  -&gt; kubernetes plugin
+  -&gt; Service / EndpointSlice cache 조회
+  -&gt; ClusterIP 또는 endpoint record 응답</code></pre>
+          </div>
+          <div class="card">
+            <h3>외부 도메인 조회</h3>
+            <pre><code>www.microsoft.com.
+  -&gt; kubernetes plugin zone 밖
+  -&gt; cache miss면 forward plugin
+  -&gt; upstream resolver
+  -&gt; response cache 저장 후 반환</code></pre>
+          </div>
+        </div>
+
+        <h3>ndots가 끼어드는 위치</h3>
+        <p>
+          <code>ndots</code>는
+          <mark>CoreDNS 내부 동작이 아니라 Pod resolver 단계</mark>에서 영향을
+          줍니다. <code>ndots:5</code> 상태에서 <code>api.github.com</code>을
+          조회하면 resolver가 search suffix 후보를 먼저 만들 수 있습니다.
+        </p>
+        <pre><code>api.github.com.&lt;namespace&gt;.svc.cluster.local.
+api.github.com.svc.cluster.local.
+api.github.com.cluster.local.
+api.github.com.</code></pre>
+        <div class="callout warn">
+          <strong>구분</strong>
+          <p>
+            <span class="red"
+              >CoreDNS가 recursive하게 이름을 바꿔 다시 질의하는 것이
+              아닙니다.</span
+            >
+            Pod resolver가 여러 후보 query를 만들고 CoreDNS는 여러 개의 독립
+            query를 받습니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="observability">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">5 · Metric, Log, Trace</div>
+            <h2>CoreDNS 관측: 보이는 것과 안 보이는 것</h2>
+            <p class="section-summary">
+              CoreDNS는 prometheus, log, trace plugin을 갖고 있지만
+              <mark>AKS와 Azure Monitor에서는 기본 수집 설정의 경계</mark>를
+              같이 봐야 합니다.
+            </p>
+          </div>
+          <div class="card">
+            <strong>핵심</strong>
+            <p>
+              <mark>plugin이 존재하는 것</mark>과
+              <mark>Azure Monitor에 자동으로 수집되는 것</mark>은 다른
+              문제입니다.
+            </p>
+          </div>
+        </div>
+
+        <h3>Metric</h3>
+        <div class="grid2">
+          <div>
+            <p>
+              <code>prometheus</code> plugin은 CoreDNS metrics를 9153 포트로
+              노출합니다.
+            </p>
+            <pre><code>.:53 {
+  ...
+  <span class="code-hi">prometheus :9153</span>
+  ...
+}</code></pre>
+            <p>
+              <mark
+                >Azure Managed Prometheus는 기본적으로 CoreDNS scraping을 하지
+                않으므로</mark
+              >, <code>ama-metrics-settings-configmap</code> 설정이 필요합니다.
+            </p>
+          </div>
+          <div class="figure">
+            <img
+              src="img/image%201.png"
+              alt="ama-metrics settings configmap volume mount screenshot"
+            />
+            <div class="caption">
+              <code>ama-metrics</code> Deployment에
+              <code>ama-metrics-settings-configmap</code>이 mount된 예시.
+            </div>
+          </div>
+        </div>
+        <pre><code>apiVersion: v1
+kind: ConfigMap
+metadata:
+  <span class="code-hi">name: ama-metrics-settings-configmap</span>
+  <span class="code-hi">namespace: kube-system</span>
+data:
+  <span class="code-hi">cluster-metrics: |-</span>
+    default-targets-scrape-enabled: |-
+      <span class="code-hi">coredns = true</span>
+    minimal-ingestion-profile: |-
+      enabled = true
+  config-version: ver1
+  controlplane-metrics: |-
+    minimal-ingestion-profile: |-
+      enabled = true
+  prometheus-collector-settings: |-
+    cluster_alias = ""
+    debug-mode = false
+    https_config = true
+    secrets_access_namespaces = ""
+  schema-version: v2</code></pre>
+        <h4>주요 metric</h4>
+        <ul class="metric-list">
+          <li><code>coredns_build_info</code></li>
+          <li><code>coredns_panics_total</code></li>
+          <li><code>coredns_dns_requests_total</code></li>
+          <li><code>coredns_dns_responses_total</code></li>
+          <li><code>coredns_dns_request_duration_seconds</code></li>
+          <li><code>coredns_forward_requests_total</code></li>
+          <li><code>coredns_forward_responses_total</code></li>
+          <li><code>coredns_forward_request_duration_seconds</code></li>
+          <li><code>coredns_cache_hits_total</code></li>
+          <li><code>coredns_cache_misses_total</code></li>
+          <li><code>coredns_cache_entries</code></li>
+          <li><code>coredns_plugin_enabled</code></li>
+          <li><code>process_resident_memory_bytes</code></li>
+          <li><code>process_cpu_seconds_total</code></li>
+          <li><code>go_goroutines</code></li>
+          <li><code>kubernetes_build_info</code></li>
+        </ul>
+        <div class="callout">
+          Azure Portal Built-in Grafana에서 CoreDNS용 Community Dashboard를
+          import해야 metric 시각화가 가능합니다.
+        </div>
+
+        <h3>Log</h3>
+        <div class="grid2">
+          <div>
+            <p>
+              <code>log</code>, <code>errors</code> plugin은 DNS traffic과 오류
+              상태를 기록할 수 있습니다. 기본 Corefile에는 log plugin이 빠져
+              있으므로 <code>coredns-custom</code>에 override를 추가하고
+              restart합니다.
+            </p>
+            <pre><code>data:
+  <span class="code-hi">log.override: |</span>
+    log</code></pre>
+          </div>
+          <div class="figure">
+            <img
+              src="img/image%202.png"
+              alt="ama-logs configmap mount screenshot"
+            />
+            <div class="caption">
+              <code>ama-logs-rs</code> Deployment에
+              <code>container-azm-ms-agentconfig</code>가 mount된 예시.
+            </div>
+          </div>
+        </div>
+        <div class="callout warn">
+          <strong>수집 경계</strong>
+          <p>
+            log plugin을 켜도
+            <span class="red"
+              >Container Insights 기본 설정만으로는 Log Analytics Workspace에
+              CoreDNS 로그가 수집되지 않을 수 있습니다.</span
+            >
+            kube-system 같은 system namespace container logs가 기본 제외되기
+            때문입니다.
+          </p>
+        </div>
+        <pre><code>apiVersion: v1
+kind: ConfigMap
+metadata:
+  <span class="code-hi">name: container-azm-ms-agentconfig</span>
+  <span class="code-hi">namespace: kube-system</span>
+data:
+  schema-version: "v1"
+  config-version: "1.0.0"
+  <span class="code-hi">log-data-collection-settings: |-</span>
+    [log_collection_settings]
+      [log_collection_settings.stdout]
+        <span class="code-hi">enabled = true</span>
+        <span class="code-hi">collect_system_pod_logs = ["kube-system:coredns"]</span>
+
+      [log_collection_settings.stderr]
+        <span class="code-hi">enabled = true</span>
+        <span class="code-hi">collect_system_pod_logs = ["kube-system:coredns"]</span></code></pre>
+        <div class="figure">
+          <img src="img/image%203.png" alt="ama logs restart screenshot" />
+          <div class="caption">
+            설정 배포 후 ama-log pod가 rollout restart되는 흐름. 자동 restart가
+            없으면 직접 restart를 수행합니다.
+          </div>
+        </div>
+
+        <h3>Trace</h3>
+        <div class="grid2">
+          <div class="card">
+            <h3>기본 상태</h3>
+            <p>
+              AKS CoreDNS 바이너리에 trace plugin은 존재하지만 기본 설정에는
+              활성화되어 있지 않습니다. <code>coredns-custom</code>을 통해 trace
+              plugin을 설정해야 합니다.
+            </p>
+          </div>
+          <div class="card">
+            <h3>지원 endpoint</h3>
+            <p>
+              trace telemetry endpoint type은 <code>zipkin</code>과
+              <code>datadog</code>만 지원하며, OpenTelemetry가 아닌 OpenTracing
+              기반입니다.
+            </p>
+          </div>
+        </div>
+
+        <h4>trace plugin 활성화 흐름</h4>
+        <p>
+          CoreDNS trace는 기본적으로 켜져 있지 않으므로, Zipkin endpoint를
+          준비한 뒤 <code>coredns-custom</code>에 <code>trace.override</code>를
+          추가하고 CoreDNS를 재시작해서 적용합니다. 테스트 구간에서는 sampling
+          값인 <code>every</code>를 작게 잡고, 공유 클러스터에서는 더 크게 잡아
+          trace 양을 제한합니다.
+        </p>
+        <pre><code><span class="code-hi">trace zipkin http://&lt;zipkin-cluster-ip&gt;:9411/api/v2/spans {</span>
+        <span class="code-hi">every &lt;TRACE_EVERY&gt;</span>
+        <span class="code-hi">service aks-coredns</span>
+}</code></pre>
+        <div class="callout warn">
+          <strong>endpoint는 가능하면 IP로 지정</strong>
+          <p>
+            CoreDNS process가 Zipkin Service 이름을 다시 CoreDNS로 질의하는
+            상황을 줄이기 위해, trace endpoint는 Service DNS 이름보다 Zipkin
+            Service ClusterIP를 사용하는 편이 안전합니다.
+          </p>
+        </div>
+        <pre><code>kubectl apply -f spec/03-dns-tools.yaml
+kubectl -n trace-lab rollout status deployment/dns-tools --timeout=5m
+
+kubectl -n trace-lab exec deployment/dns-tools -- sh -c '
+for i in $(seq 1 30); do
+  dig +short kubernetes.default.svc.cluster.local
+  dig +short www.microsoft.com
+  dig +short api.github.com
+done
+'</code></pre>
+        <pre><code>kubectl -n "$LAB_NS" port-forward service/zipkin 9411:9411</code></pre>
+        <div class="figure">
+          <img src="img/image%204.png" alt="Zipkin trace result screenshot" />
+          <div class="caption">
+            Zipkin으로 CoreDNS trace를 확인한 결과 화면.
+          </div>
+        </div>
+
+        <h4>Application trace context가 DNS query까지 전파되는지 확인</h4>
+        <p>
+          비교를 위해 application OpenTelemetry trace와 CoreDNS trace를 같은
+          OpenTelemetry Collector debug log에 모았습니다. 확인하려는 핵심은
+          <mark>application trace ID가 DNS/CoreDNS trace까지 이어지는가</mark
+          >입니다.
+        </p>
+        <div class="diagram-panel">
+          <p class="diagram-title">
+            Application trace context propagation 확인 구조
+          </p>
+          <div class="trace-map">
+            <div class="trace-lane">
+              <h4>Application trace</h4>
+              <div class="trace-node">
+                <b>otel-dns-client</b><span>HTTP request 처리</span>
+              </div>
+              <div class="trace-node">
+                <b>OTLP/HTTP</b
+                ><span>OpenTelemetry Collector OTLP receiver</span>
+              </div>
+              <div class="trace-node">
+                <b>Trace ID</b><span>application request의 trace ID 사용</span>
+              </div>
+            </div>
+            <div class="trace-gap">trace context<br />not propagated</div>
+            <div class="trace-lane">
+              <h4>CoreDNS trace</h4>
+              <div class="trace-node">
+                <b>CoreDNS trace plugin</b
+                ><span>DNS query마다 <code>servedns</code> span 생성</span>
+              </div>
+              <div class="trace-node">
+                <b>Zipkin protocol</b><span>Collector Zipkin receiver</span>
+              </div>
+              <div class="trace-node">
+                <b>Trace ID</b><span>별도 root trace로 생성</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-wrap compact-table">
+          <table>
+            <thead>
+              <tr>
+                <th>비교 항목</th>
+                <th>Application trace</th>
+                <th>CoreDNS trace</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>service name</td>
+                <td><code>otel-dns-client</code></td>
+                <td><code>aks-coredns</code></td>
+              </tr>
+              <tr>
+                <td>span name</td>
+                <td>
+                  <code>GET /resolve-and-call</code>, outbound <code>GET</code>
+                </td>
+                <td><code>servedns</code></td>
+              </tr>
+              <tr>
+                <td>trace ID</td>
+                <td>application request trace ID</td>
+                <td>
+                  <span class="red"
+                    >application trace ID와 다른 별도 trace ID</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>parent ID</td>
+                <td>HTTP span 간 parent-child 관계 존재</td>
+                <td>
+                  <span class="red"
+                    >root <code>servedns</code> span은 parent ID가 비어
+                    있음</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>metadata 연결 단서</td>
+                <td>request URL, outbound host, timestamp</td>
+                <td>query name, client Pod IP, rcode, timestamp</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout danger">
+          <strong>Application trace와의 correlation</strong>
+          <p>
+            CoreDNS trace plugin은 Zipkin OpenTracing wrapper 기반이라 기본
+            propagation이 W3C <code>traceparent</code>가 아닙니다. 일반 UDP/TCP
+            DNS query에는 HTTP header처럼 trace context를 실을 carrier도
+            없습니다. 그래서
+            <span class="red"
+              >CoreDNS <code>servedns</code> span은 application span의 child가
+              아니라 별도 root trace로 생성됩니다.</span
+            >
+          </p>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <h3>traceparent 직접 주입 실험</h3>
+            <p>
+              HTTP 요청에 <code>traceparent</code> header를 직접 넣으면
+              application trace는 그 trace ID를 사용합니다. 하지만 DNS
+              packet에는 그 header가 실리지 않으므로 CoreDNS trace는 여전히 별도
+              trace ID를 사용합니다.
+            </p>
+          </div>
+          <div class="card">
+            <h3>현실적인 correlation 기준</h3>
+            <p>
+              자동 parent-child 관계 대신
+              <mark
+                >timestamp, query name, client Pod IP, namespace/workload
+                metadata</mark
+              >를 기준으로 application request와 CoreDNS query를 맞춰 보는
+              방식이 현실적입니다.
+            </p>
+          </div>
+        </div>
+
+        <h4>DNS protocol-level trace context는 가능한가?</h4>
+        <p>
+          DNS에는 HTTP header 같은 범용 metadata 영역은 없지만, EDNS(0)의
+          <code>OPT</code> pseudo-RR option을 carrier로 삼는 방식은 이론적으로
+          가능합니다. EDNS <code>TRACEPARENT</code> draft는 W3C Trace Context의
+          <code>trace-id</code>, <code>parent-id</code>,
+          <code>trace-flags</code>를 DNS option data에 싣는 방향입니다.
+        </p>
+        <div class="table-wrap compact-table">
+          <table>
+            <thead>
+              <tr>
+                <th>질문</th>
+                <th>판단</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>DNS packet에 trace context를 실을 확장 지점이 있는가?</td>
+                <td>EDNS option을 사용하면 기술적으로 가능하다.</td>
+              </tr>
+              <tr>
+                <td>일반 AKS Pod → CoreDNS 경로에서 자동으로 전파되는가?</td>
+                <td>
+                  <span class="red"
+                    >아니다. 일반 resolver가 EDNS trace context를 넣지
+                    않는다.</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  AKS managed CoreDNS에서 trace plugin 코드를 바꿀 수 있는가?
+                </td>
+                <td>
+                  어렵다. <code>coredns-custom</code>은 Corefile 설정만 바꾼다.
+                </td>
+              </tr>
+              <tr>
+                <td>같은 backend로 모으면 하나의 trace tree가 되는가?</td>
+                <td>
+                  아니다. trace ID가 다르면 backend가 자동 병합하지 않는다.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout">
+          <strong>대안: application DNS span과 eBPF/OBI correlation</strong>
+          <p>
+            Application instrumentation은 현재 active span 아래에
+            <code>dns.resolve</code> 같은 span을 만들 수 있습니다. 이 방식은
+            application 요청 안에서 DNS lookup 시간이 병목인지 보기 좋지만,
+            CoreDNS 내부 plugin/cache/upstream 경로는 보이지 않습니다. 반대로
+            eBPF/OBI는 실제 DNS packet과 socket/flow를 관측해 qname, rcode,
+            latency, source workload를 볼 수 있지만, DNS packet에 trace
+            context를 주입하는 방식은 아닙니다. 따라서 가능한 경우 span link
+            또는 metadata correlation으로 연결하는 접근에 가깝습니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="troubleshooting">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">6 · Troubleshooting Scenarios</div>
+            <h2>시나리오 기반 설정과 판단</h2>
+            <p class="section-summary">
+              다섯 가지 운영 시나리오를 다룹니다: conditional forward,
+              latency/timeout, ndots query 증가, TTL/cache/prefetch, Pod 내부
+              DNS 기본 진단.
+            </p>
+          </div>
+          <div class="card">
+            <strong>분류 기준</strong>
+            <p>
+              <mark
+                >CoreDNS 자체 문제인지, upstream 문제인지, client resolver가
+                query를 늘린 것인지</mark
+              >
+              먼저 나눕니다.
+            </p>
+          </div>
+        </div>
+
+        <article class="scenario">
+          <h3>1. 특정 도메인을 별도 DNS 서버로 conditional forward</h3>
+          <p>
+            사내 DNS zone을 AKS 기본 upstream이 아니라 별도 DNS 서버로 보내고
+            싶은 경우입니다. 예시는 <code>corp.example.com</code>을 사내 DNS
+            서버 <code>10.10.0.10</code>, <code>10.10.0.11</code>로
+            forward합니다.
+          </p>
+          <div class="grid2">
+            <div class="card">
+              <h4>CoreDNS custom 방식</h4>
+              <p>
+                <code>coredns-custom</code>에 <code>.server</code>로 끝나는
+                key를 추가하여 AKS 기본 Corefile의
+                <code>import custom/*.server</code>에 의해 로드되게 합니다.
+              </p>
+            </div>
+            <div class="card">
+              <h4>Azure DNS layer 방식</h4>
+              <p>
+                Azure Private DNS Zone 또는 Azure DNS Private Resolver outbound
+                endpoint와 DNS forwarding ruleset을 사용합니다. 여러
+                VNet/클러스터에서 공유할 때 중앙집중적입니다.
+              </p>
+            </div>
+          </div>
+          <pre><code>apiVersion: v1
+kind: ConfigMap
+metadata:
+  <span class="code-hi">name: coredns-custom</span>
+  <span class="code-hi">namespace: kube-system</span>
+data:
+  <span class="code-hi">corp-example-com.server: |</span>
+    corp.example.com:53 {
+      errors
+      <span class="code-hi">forward . 10.10.0.10 10.10.0.11</span>
+    }</code></pre>
+          <ul>
+            <li>
+              <code>forward</code> 대상은
+              <mark>DNS 이름보다 IP가 안전합니다.</mark> upstream 주소를
+              resolve하기 위해 다시 DNS가 필요한 bootstrap 문제를 피합니다.
+            </li>
+            <li>
+              AKS subnet에서 사내 DNS 서버까지 UDP/TCP 53이 열려 있어야 합니다.
+            </li>
+            <li>
+              <span class="red"
+                >전체 DNS를 사내 DNS로 보내는 것과 특정 zone만 보내는 것은
+                다릅니다.</span
+              >
+            </li>
+          </ul>
+          <pre><code>kubectl -n kube-system patch configmap coredns-custom \
+  --type json \
+  -p='[{"op":"remove","path":"/data/corp-example-com.server"}]'
+
+kubectl -n kube-system rollout restart deployment/coredns
+kubectl -n kube-system rollout status deployment/coredns --timeout=5m</code></pre>
+        </article>
+
+        <article class="scenario">
+          <h3>2. DNS 응답 지연 또는 timeout</h3>
+          <div class="grid2">
+            <div class="card">
+              <h4>CoreDNS 자체 처리량 부족</h4>
+              <p>
+                높은 QPS, CPU throttling, cache miss 증가, 과도한 NXDOMAIN 등이
+                원인일 수 있습니다.
+              </p>
+            </div>
+            <div class="card">
+              <h4>Upstream 지연</h4>
+              <p>
+                외부 도메인 forward, upstream resolver 지연, 네트워크 이슈가
+                원인일 수 있습니다.
+              </p>
+            </div>
+          </div>
+          <div class="callout ok">
+            <strong>1차 대응</strong>
+            <p>
+              CoreDNS는 stateless DNS 서버이므로 일반적으로 CPU limit을 먼저
+              키우기보다 <mark>replica 수를 늘려 수평 확장하는 방식</mark>이
+              흔한 대응입니다.
+            </p>
+          </div>
+          <h4>AKS CoreDNS autoscaling 구조</h4>
+          <pre><code>kubectl -n kube-system get deployment coredns coredns-autoscaler
+kubectl -n kube-system get configmap coredns-autoscaler -o yaml
+kubectl -n kube-system get deployment coredns-autoscaler -o yaml</code></pre>
+          <pre><code>coredns-autoscaler Pod
+  -&gt; Kubernetes API에서 schedulable node/core 수 확인
+  -&gt; coredns-autoscaler ConfigMap의 scaling rule 확인
+  -&gt; deployment/coredns replica 수 조정
+  -&gt; Deployment controller가 CoreDNS Pod 수 유지</code></pre>
+          <pre><code>apiVersion: v1
+kind: ConfigMap
+metadata:
+  <span class="code-hi">name: coredns-autoscaler</span>
+  <span class="code-hi"></span>namespace: kube-system</span>
+data:
+  <span class="code-hi">ladder: '{"coresToReplicas":[[1,2],[512,3],[1024,4],[2048,5]],"nodesToReplicas":[[1,2],[8,3],[16,4],[32,5]]}'</span></code></pre>
+          <div class="callout warn">
+            <strong>중요</strong>
+            <p>
+              <code>coredns-autoscaler</code>는
+              <span class="red">Kubernetes HPA가 아니라</span>
+              <mark><code>cluster-proportional-autoscaler</code></mark
+              >입니다. CPU 사용률이나 DNS latency를 직접 보고 scale out하는
+              closed-loop autoscaling이 아니라
+              <mark>node/core 수에 비례해 replica를 계산</mark>합니다.
+            </p>
+          </div>
+          <h4>관찰 지표</h4>
+          <ul class="metric-list">
+            <li><code>coredns_dns_requests_total</code></li>
+            <li><code>coredns_dns_request_duration_seconds</code></li>
+            <li>
+              <code>coredns_dns_responses_total</code>에서 NXDOMAIN/SERVFAIL
+              증가
+            </li>
+            <li><code>coredns_forward_requests_total</code></li>
+            <li><code>coredns_forward_request_duration_seconds</code></li>
+            <li>
+              <code>coredns_cache_hits_total</code>,
+              <code>coredns_cache_requests_total</code>
+            </li>
+            <li>CoreDNS Pod CPU usage / throttling / restart count</li>
+          </ul>
+          <p>
+            NodeLocal DNSCache나 LocalDNS는 Pod → CoreDNS 중앙 경로의 부하와
+            latency를 줄이는 보조 대안으로, DNS QPS가 매우 높거나 node-local
+            cache hit 이점이 큰 경우 별도 검토합니다.
+          </p>
+        </article>
+
+        <article class="scenario">
+          <h3>3. ndots로 인해 DNS query가 불필요하게 늘어나는 경우</h3>
+          <pre><code>search &lt;namespace&gt;.svc.cluster.local svc.cluster.local cluster.local
+<span class="code-hi">nameserver &lt;CoreDNS Service ClusterIP&gt;</span>
+<span class="code-hi">options ndots:5</span></code></pre>
+          <p>
+            <code>ndots:5</code>는 조회하려는 이름의 dot 개수가 5개보다 적으면
+            resolver가 먼저 search suffix를 붙여 조회한다는 의미입니다.
+          </p>
+          <div class="callout">
+            <strong>왜 기본값이 ndots:5인가</strong>
+            <p>
+              Kubernetes Service의 SRV record는 예를 들어
+              <code>_http._tcp.my-service.default.svc</code>처럼 점이 여러 개
+              포함될 수 있습니다. <code>ndots</code>를 너무 낮게 잡으면 이런
+              이름을 search domain 확장 전에 absolute name처럼 먼저 처리할 수
+              있어, 내부 service discovery 패턴과 어긋날 수 있습니다.
+              <code>ndots:5</code>는 내부 DNS 편의성을 위한 기본값이지만, 외부
+              도메인을 많이 조회하는 workload에서는 query 증폭을 만들 수
+              있습니다.
+            </p>
+          </div>
+          <div class="grid2">
+            <div class="card">
+              <h4>핵심 현상</h4>
+              <ul>
+                <li>애플리케이션은 하나의 이름만 조회했다고 생각합니다.</li>
+                <li>
+                  <mark
+                    >Pod resolver는 search suffix 후보를 여러 개 만듭니다.</mark
+                  >
+                </li>
+                <li>CoreDNS는 여러 독립 query를 받은 것으로 기록합니다.</li>
+                <li>존재하지 않는 후보는 대부분 NXDOMAIN으로 끝납니다.</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>중요한 구분</h4>
+              <p>
+                이것은 <mark>client-side search expansion</mark>입니다.
+                <span class="red"
+                  >CoreDNS가 이름을 바꿔가며 recursive하게 다시 질의하는 것이
+                  아닙니다.</span
+                >
+              </p>
+            </div>
+          </div>
+          <pre><code>application
+  -&gt; libc / resolver
+  -&gt; /etc/resolv.conf 확인
+  -&gt; search suffix 후보 이름 생성
+  -&gt; CoreDNS에 후보 query를 하나씩 전송
+  -&gt; NXDOMAIN이면 다음 후보 query 전송</code></pre>
+          <h4>Lab에서 확인한 예시</h4>
+          <p>
+            외부 도메인에서도 같은 패턴이 나타납니다. 예를 들어
+            <code>api.github.com</code>은 점이 2개뿐이므로
+            <code>ndots:5</code> 기준에서는 search suffix 후보가 먼저 생성될 수
+            있습니다.
+          </p>
+          <pre><code>api.github.com.&lt;namespace&gt;.svc.cluster.local.
+api.github.com.svc.cluster.local.
+api.github.com.cluster.local.
+api.github.com.&lt;cloud-internal-domain&gt;.
+api.github.com.</code></pre>
+          <div class="callout warn">
+            <strong>query explosion</strong>
+            <p>
+              앞의 후보들은 대부분 <code>NXDOMAIN</code>으로 끝나고 마지막
+              absolute query에서 성공합니다. 외부 hostname lookup이 초당 100번
+              발생하고, 각 lookup마다 성공 전 4개의 search suffix query가
+              추가되면
+              <span class="red">초당 400개 이상의 불필요한 DNS query</span>가
+              생길 수 있습니다.
+            </p>
+          </div>
+          <pre><code>ndots-target.ndots-lab.svc.cluster.local.ndots-lab.svc.cluster.local.
+ndots-target.ndots-lab.svc.cluster.local.svc.cluster.local.
+ndots-target.ndots-lab.svc.cluster.local.cluster.local.
+ndots-target.ndots-lab.svc.cluster.local.&lt;azure-internal-domain&gt;.
+ndots-target.ndots-lab.svc.cluster.local.</code></pre>
+          <div class="callout">
+            <strong>Lab 결론</strong>
+            <ul>
+              <li>
+                <code>ndots:5</code> + trailing dot 없음:
+                <span class="red">search suffix query가 발생합니다.</span>
+              </li>
+              <li>
+                trailing dot 있음: <mark>실제 Service FQDN만 조회됩니다.</mark>
+              </li>
+              <li>
+                <code>ndots:1</code> + trailing dot 없음:
+                <mark>실제 Service FQDN만 조회됩니다.</mark>
+              </li>
+            </ul>
+          </div>
+          <h4>완화 방법</h4>
+          <ul>
+            <li>
+              외부 도메인 또는 긴 FQDN을 자주 조회하는 Pod에는
+              <code>dnsConfig.options.ndots</code> 값을 낮추는 방식을
+              검토합니다.
+            </li>
+            <li>
+              trailing dot을 붙이면 search suffix 확장을 건너뛸 수 있으나
+              애플리케이션과 TLS hostname 처리 방식을 확인해야 합니다.
+            </li>
+            <li>
+              CoreDNS log, <code>coredns_dns_requests_total</code>,
+              <code>coredns_dns_responses_total</code>, NXDOMAIN 비율, forward
+              latency를 함께 봅니다.
+            </li>
+            <li>
+              DNS query가 많은 워크로드에서는 connection reuse, keep-alive,
+              application-level DNS cache도 점검합니다.
+            </li>
+          </ul>
+          <div class="grid2">
+            <div class="card">
+              <h4>Pod 단위 ndots 조정</h4>
+              <p>
+                <code>ndots:2</code>로 낮추면 <code>api.github.com</code>처럼
+                점이 2개 이상인 외부 도메인은 처음부터 absolute name으로 먼저
+                조회되어 query 증폭이 줄어듭니다.
+              </p>
+            </div>
+            <div class="card">
+              <h4>trade-off</h4>
+              <p>
+                내부 service 이름이나 SRV record lookup이 search domain 확장에
+                의존한다면 동작 차이가 생길 수 있습니다. cluster-wide 변경보다
+                외부 API 호출이 많은 특정 Pod에서 제한적으로 검증하는 편이
+                안전합니다.
+              </p>
+            </div>
+          </div>
+          <pre><code>spec:
+  <span class="code-hi">dnsPolicy: ClusterFirst</span>
+  <span class="code-hi">dnsConfig:</span>
+    options:
+      - <span class="code-hi">name: ndots</span>
+        <span class="code-hi">value: "2"</span></code></pre>
+        </article>
+
+        <article class="scenario">
+          <h3>4. TTL 만료 시 upstream resolution latency 줄이기</h3>
+          <p>
+            CoreDNS <code>cache</code> plugin은 upstream, database, Kubernetes
+            API 등 backend 조회 비용이 있는 응답을 일정 시간 메모리에
+            저장합니다. AKS 기본 Corefile에는 보통 <code>cache 30</code>이
+            포함되어 최대 30초 캐시로 동작합니다.
+          </p>
+          <div class="grid2">
+            <div class="card">
+              <h4>왜 latency가 생기나</h4>
+              <p>
+                cache hit이면 메모리에서 바로 응답하지만,
+                <mark
+                  >miss 또는 TTL 만료 시 backend/upstream resolver로 다시
+                  질의</mark
+                >합니다. 외부 도메인은 <code>forward</code> plugin 왕복 시간이
+                붙을 수 있습니다.
+              </p>
+            </div>
+            <div class="card">
+              <h4>짧은 TTL + 높은 QPS</h4>
+              <p>
+                인기 hostname의 TTL이 짧고 QPS가 높으면
+                <span class="red"
+                  >TTL 만료 시점마다 여러 client가 동시에 upstream resolution을
+                  유발</span
+                >할 수 있습니다.
+              </p>
+            </div>
+          </div>
+          <h4>prefetch</h4>
+          <pre><code>cache {
+          <span class="code-hi">prefetch AMOUNT [DURATION] [PERCENTAGE%]</span>
+}</code></pre>
+          <ul>
+            <li>
+              <code>AMOUNT</code>: popular query 판단을 위한 최소 query 횟수
+            </li>
+            <li>
+              <code>DURATION</code>: query 사이 gap 기준. 기본값은
+              <code>1m</code>
+            </li>
+            <li>
+              <code>PERCENTAGE</code>: TTL이 이 비율 아래로 떨어지면 prefetch
+              수행. 기본값은 <code>10%</code>
+            </li>
+            <li>
+              <code>prefetch 5 1m 10%</code>:
+              <mark>TTL 하위 10% 시점에 미리 갱신</mark>
+            </li>
+          </ul>
+          <h4>관찰 지표</h4>
+          <ul class="metric-list">
+            <li><code>coredns_cache_hits_total</code></li>
+            <li><code>coredns_cache_requests_total</code></li>
+            <li><code>coredns_cache_prefetch_total</code></li>
+            <li><code>coredns_forward_request_duration_seconds</code></li>
+            <li><code>coredns_forward_requests_total</code></li>
+          </ul>
+        </article>
+
+        <article class="scenario">
+          <h3>5. Pod 내부에서 DNS 기본 진단 순서 돌리기</h3>
+          <p>
+            DNS 문제는 클러스터 밖에서 먼저 보기보다, 실제 Pod가 사용하는
+            resolver 설정과 동일한 위치에서 확인하는 것이 좋습니다. debug Pod를
+            띄운 뒤 <code>/etc/resolv.conf</code>, 내부 DNS, 외부 DNS, CoreDNS
+            endpoint와 log를 순서대로 확인합니다.
+          </p>
+          <div class="grid2">
+            <div>
+              <h4>debug Pod 실행</h4>
+              <pre><code>kubectl run dns-test --rm -it --restart=Never \
+  --image=nicolaka/netshoot -- bash</code></pre>
+            </div>
+            <div>
+              <h4>공식 dnsutils Pod</h4>
+              <pre><code>kubectl apply -f \
+  https://k8s.io/examples/admin/dns/dnsutils.yaml
+kubectl exec -it dnsutils -- sh</code></pre>
+            </div>
+          </div>
+          <h4>기본 확인 순서</h4>
+          <pre><code><span class="code-hi">cat /etc/resolv.conf</span>
+<span class="code-hi">nslookup kubernetes.default</span>
+<span class="code-hi">nslookup google.com</span>
+
+kubectl get pods -n kube-system -l k8s-app=kube-dns
+kubectl get endpointslice -l kubernetes.io/service-name=kube-dns -n kube-system
+kubectl logs -n kube-system -l k8s-app=kube-dns --tail=100</code></pre>
+          <div class="grid2">
+            <div class="card">
+              <h4>내부 DNS 확인</h4>
+              <p>
+                <code>nslookup kubernetes.default</code>는 cluster 내부 DNS와
+                CoreDNS <code>kubernetes</code> plugin 경로를 확인합니다.
+              </p>
+            </div>
+            <div class="card">
+              <h4>외부 DNS 확인</h4>
+              <p>
+                <code>nslookup google.com</code>은 외부 DNS와 CoreDNS
+                <code>forward</code> plugin / upstream resolver 경로를
+                확인합니다.
+              </p>
+            </div>
+          </div>
+          <div class="table-wrap compact-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>내부 DNS</th>
+                  <th>외부 DNS</th>
+                  <th>의심 원인</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>실패</td>
+                  <td>실패</td>
+                  <td>
+                    CoreDNS down/unreachable, NetworkPolicy, 잘못된
+                    <code>dnsPolicy</code> 또는 Pod DNS 설정
+                  </td>
+                </tr>
+                <tr>
+                  <td>실패</td>
+                  <td>성공</td>
+                  <td>
+                    CoreDNS <code>kubernetes</code> plugin 문제 또는 API server
+                    연결 문제
+                  </td>
+                </tr>
+                <tr>
+                  <td>성공</td>
+                  <td>실패</td>
+                  <td>
+                    upstream resolver, <code>forward</code> plugin, node/cloud
+                    DNS 경로 문제
+                  </td>
+                </tr>
+                <tr>
+                  <td>성공</td>
+                  <td>성공</td>
+                  <td>
+                    DNS 자체 문제보다는 애플리케이션, 네트워크, TLS, 대상 서비스
+                    문제 가능성
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout">
+            <strong>출발점으로 쓰기</strong>
+            <p>
+              내부 DNS가 실패하면 CoreDNS 상태와 Kubernetes API 연동을 먼저
+              보고, 외부 DNS만 실패하면 <code>forward . /etc/resolv.conf</code>,
+              upstream resolver, 방화벽/UDR/NetworkPolicy를 확인합니다.
+            </p>
+          </div>
+        </article>
+      </section>
+
+      <section id="wrapup">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Wrap-up</div>
+            <h2>운영자가 가져갈 판단 프레임</h2>
+            <p class="section-summary">
+              CoreDNS 문제는
+              <mark
+                >Pod resolver, kube-dns Service, CoreDNS plugin chain, upstream
+                resolver</mark
+              >를 단계별로 분리해서 보는 문제입니다.
+            </p>
+          </div>
+          <div class="card">
+            <strong>한 문장</strong>
+            <p>
+              <mark
+                >CoreDNS가 느린지, upstream이 느린지, resolver가 query를
+                늘렸는지</mark
+              >
+              먼저 분리합니다.
+            </p>
+          </div>
+        </div>
+        <div class="grid3">
+          <div class="card">
+            <h3>1. resolver 단계</h3>
+            <p>
+              Pod <code>/etc/resolv.conf</code>, <code>dnsPolicy</code>,
+              <code>dnsConfig.options.ndots</code>, runtime resolver/cache를
+              확인합니다.
+            </p>
+          </div>
+          <div class="card">
+            <h3>2. Service 경로</h3>
+            <p>
+              <code>kube-dns</code> Service, EndpointSlice, CoreDNS Pod 상태와
+              분산 경로를 확인합니다.
+            </p>
+          </div>
+          <div class="card">
+            <h3>3. CoreDNS 내부</h3>
+            <p>
+              plugin chain, cache hit/miss, kubernetes zone 여부, forward 여부,
+              plugin 실행 순서 오해를 정리합니다.
+            </p>
+          </div>
+          <div class="card">
+            <h3>4. Observability</h3>
+            <p>
+              Prometheus scraping, Container Insights system namespace log
+              collection, trace plugin 한계를 설정과 함께 봅니다.
+            </p>
+          </div>
+          <div class="card">
+            <h3>5. Scaling</h3>
+            <p>
+              CoreDNS replica scaling은 흔한 1차 대응이지만, AKS autoscaler는
+              DNS QPS가 아니라 node/core 기반입니다.
+            </p>
+          </div>
+          <div class="card">
+            <h3>6. Query reduction</h3>
+            <p>
+              <code>ndots</code>, trailing dot, connection reuse, app-level DNS
+              cache, CoreDNS cache/prefetch로 query와 latency를 줄입니다.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="wrap">
+      <p>
+        <strong>핵심:</strong> DNS 장애는 query 생성 지점과 응답 대기 지점을
+        분리해서 본다.
+      </p>
+    </footer>
+  </body>
+</html>

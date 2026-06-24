@@ -1,0 +1,17 @@
+{
+  "name": "aks-coredns-slidev-study",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "slidev slides.md --bind 0.0.0.0",
+    "build": "slidev build slides.md --out dist",
+    "export": "slidev export slides.md"
+  },
+  "dependencies": {
+    "@slidev/cli": "latest",
+    "@slidev/theme-default": "latest",
+    "vue": "latest"
+  },
+  "devDependencies": {}
+}

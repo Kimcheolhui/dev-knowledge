@@ -1,1 +1,7 @@
 artifacts/
+
+.github/skills/pptx/
+.github/skills/slidev/
+
+node_modules/
+dist/
