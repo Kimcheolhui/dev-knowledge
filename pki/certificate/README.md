@@ -11,6 +11,13 @@
 | 4. Let's Encrypt와 nip.io | [04_letsencrypt-and-nipio.md](04_letsencrypt-and-nipio.md) | 3분 |
 | 5. 인증서로 인한 장애 사례 | [05_incidents.md](05_incidents.md) | 3분 |
 
+연결 문서.
+
+| 문서 | 내용 |
+|---|---|
+| [../labs/README.md](../labs/README.md) | 실습 계획 개요 |
+| [../mtls/README.md](../mtls/README.md) | mTLS와 워크로드 신원. 별도 세션 |
+
 
 ---
 
